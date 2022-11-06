@@ -19,8 +19,8 @@ The controller supports:<br>
 
 * Arduino ISP programming done with RaspberryPI [<a href="https://learn.adafruit.com/program-an-avr-or-arduino-using-raspberry-pi-gpio-pins">Adafruit manual</a>]
 
-* Circuit designed in Eagle
+* Circuit designed in Eagle [Version 0]
 
 <p align=center>
-<img src="resources/sch_v0.png", height=120h border=2>
+<img src="resources/sch_v0.png", height=150h border=2>
 </p>
