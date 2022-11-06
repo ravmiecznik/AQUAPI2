@@ -12,6 +12,11 @@ The controller supports:<br>
 
 * DS12B20 digital thermometer sensor [<a href="https://www.circuitbasics.com/raspberry-pi-ds18b20-temperature-sensor-tutorial/">how to</a>]
 
+* 8 channel Relay 
+<p align=center>
+<img src="resources/8chann_relay.jpeg" height=120h, border=2>
+</p>
+
 * Arduino MINI PRO to work with PH Proble
 <p  align=center>
 <img src="https://alselectro.files.wordpress.com/2017/05/arduinopromini000b.jpg", height=120h>
