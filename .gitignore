@@ -1,2 +1,8 @@
+#brd tmp files
 *.b#[0-9]*
+
+#sch tmp files
 *.s#[0-9]*
+
+#lbr tmp files
+*.l#[0-9]*

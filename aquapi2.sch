@@ -668,6 +668,99 @@ In this library the device names are the same as the pin names of the symbols, t
 </deviceset>
 </devicesets>
 </library>
+<library name="RELAYx8">
+<packages>
+<package name="RELAY_X8">
+<description>8xRelay PCB</description>
+<wire x1="0" y1="0" x2="138" y2="0" width="0.127" layer="21"/>
+<wire x1="138" y1="0" x2="138" y2="50" width="0.127" layer="21"/>
+<wire x1="138" y1="50" x2="0" y2="50" width="0.127" layer="21"/>
+<wire x1="0" y1="50" x2="0" y2="0" width="0.127" layer="21"/>
+<hole x="1.5" y="1.5" drill="2.8"/>
+<hole x="136.5" y="1.5" drill="2.8"/>
+<hole x="136.5" y="48.5" drill="2.8"/>
+<hole x="1.5" y="48.5" drill="2.8"/>
+<pad name="DN1" x="60.57" y="3" drill="1.016" shape="octagon"/>
+<pad name="DN2" x="63.11" y="3" drill="1.016" shape="octagon"/>
+<pad name="DN3" x="65.65" y="3" drill="1.016" shape="octagon"/>
+<pad name="DN4" x="68.19" y="3" drill="1.016" shape="octagon"/>
+<pad name="DN5" x="70.73" y="3" drill="1.016" shape="octagon"/>
+<pad name="DN6" x="73.27" y="3" drill="1.016" shape="octagon"/>
+<pad name="DN7" x="75.81" y="3" drill="1.016" shape="octagon"/>
+<pad name="DN8" x="78.35" y="3" drill="1.016" shape="octagon"/>
+<pad name="VCC" x="80.89" y="3" drill="1.016" shape="octagon"/>
+<pad name="GND" x="58.03" y="3" drill="1.016" shape="octagon"/>
+</package>
+</packages>
+<symbols>
+<symbol name="RELAY_X8">
+<wire x1="-6.35" y1="0" x2="22.86" y2="0" width="0.254" layer="94"/>
+<wire x1="22.86" y1="0" x2="22.86" y2="63.5" width="0.254" layer="94"/>
+<wire x1="22.86" y1="63.5" x2="-6.35" y2="63.5" width="0.254" layer="94"/>
+<wire x1="-6.35" y1="63.5" x2="-6.35" y2="0" width="0.254" layer="94"/>
+<pin name="VCC" x="-11.43" y="55.88" length="middle"/>
+<pin name="GND" x="-11.43" y="40.64" length="middle"/>
+<pin name="DN1" x="27.94" y="49.53" length="middle" rot="R180"/>
+<pin name="DN2" x="27.94" y="43.18" length="middle" rot="R180"/>
+<pin name="DN3" x="27.94" y="36.83" length="middle" rot="R180"/>
+<pin name="DN4" x="27.94" y="30.48" length="middle" rot="R180"/>
+<pin name="DN5" x="27.94" y="24.13" length="middle" rot="R180"/>
+<pin name="DN6" x="27.94" y="17.78" length="middle" rot="R180"/>
+<pin name="DN7" x="27.94" y="11.43" length="middle" rot="R180"/>
+<pin name="DN8" x="27.94" y="5.08" length="middle" rot="R180"/>
+<circle x="6.35" y="19.05" radius="0.567959375" width="0.254" layer="94"/>
+<circle x="12.192" y="19.05" radius="0.567959375" width="0.254" layer="94"/>
+<wire x1="12.446" y1="21.844" x2="6.35" y2="19.05" width="0.254" layer="94"/>
+<circle x="6.35" y="6.35" radius="0.567959375" width="0.254" layer="94"/>
+<circle x="12.192" y="6.35" radius="0.567959375" width="0.254" layer="94"/>
+<wire x1="12.446" y1="9.144" x2="6.35" y2="6.35" width="0.254" layer="94"/>
+<circle x="6.35" y="12.7" radius="0.567959375" width="0.254" layer="94"/>
+<circle x="12.192" y="12.7" radius="0.567959375" width="0.254" layer="94"/>
+<wire x1="12.446" y1="15.494" x2="6.35" y2="12.7" width="0.254" layer="94"/>
+<circle x="6.35" y="25.4" radius="0.567959375" width="0.254" layer="94"/>
+<circle x="12.192" y="25.4" radius="0.567959375" width="0.254" layer="94"/>
+<wire x1="12.446" y1="28.194" x2="6.35" y2="25.4" width="0.254" layer="94"/>
+<circle x="6.35" y="31.75" radius="0.567959375" width="0.254" layer="94"/>
+<circle x="12.192" y="31.75" radius="0.567959375" width="0.254" layer="94"/>
+<wire x1="12.446" y1="34.544" x2="6.35" y2="31.75" width="0.254" layer="94"/>
+<circle x="6.35" y="38.1" radius="0.567959375" width="0.254" layer="94"/>
+<circle x="12.192" y="38.1" radius="0.567959375" width="0.254" layer="94"/>
+<wire x1="12.446" y1="40.894" x2="6.35" y2="38.1" width="0.254" layer="94"/>
+<circle x="6.35" y="44.45" radius="0.567959375" width="0.254" layer="94"/>
+<circle x="12.192" y="44.45" radius="0.567959375" width="0.254" layer="94"/>
+<wire x1="12.446" y1="47.244" x2="6.35" y2="44.45" width="0.254" layer="94"/>
+<circle x="6.35" y="50.8" radius="0.567959375" width="0.254" layer="94"/>
+<circle x="12.192" y="50.8" radius="0.567959375" width="0.254" layer="94"/>
+<wire x1="12.446" y1="53.594" x2="6.35" y2="50.8" width="0.254" layer="94"/>
+</symbol>
+</symbols>
+<devicesets>
+<deviceset name="RELAY_X8">
+<gates>
+<gate name="G$1" symbol="RELAY_X8" x="-35.56" y="-22.86"/>
+</gates>
+<devices>
+<device name="" package="RELAY_X8">
+<connects>
+<connect gate="G$1" pin="DN1" pad="DN1"/>
+<connect gate="G$1" pin="DN2" pad="DN2"/>
+<connect gate="G$1" pin="DN3" pad="DN3"/>
+<connect gate="G$1" pin="DN4" pad="DN4"/>
+<connect gate="G$1" pin="DN5" pad="DN5"/>
+<connect gate="G$1" pin="DN6" pad="DN6"/>
+<connect gate="G$1" pin="DN7" pad="DN7"/>
+<connect gate="G$1" pin="DN8" pad="DN8"/>
+<connect gate="G$1" pin="GND" pad="GND"/>
+<connect gate="G$1" pin="VCC" pad="VCC"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+</devicesets>
+</library>
 </libraries>
 <attributes>
 </attributes>
@@ -695,6 +788,9 @@ In this library the device names are the same as the pin names of the symbols, t
 <part name="SUPPLY11" library="supply2" library_urn="urn:adsk.eagle:library:372" deviceset="GND" device=""/>
 <part name="SUPPLY12" library="supply2" library_urn="urn:adsk.eagle:library:372" deviceset="GND" device=""/>
 <part name="SUPPLY13" library="supply2" library_urn="urn:adsk.eagle:library:372" deviceset="GND" device=""/>
+<part name="U$3" library="RELAYx8" deviceset="RELAY_X8" device=""/>
+<part name="SUPPLY14" library="supply2" library_urn="urn:adsk.eagle:library:372" deviceset="GND" device=""/>
+<part name="SUPPLY15" library="supply2" library_urn="urn:adsk.eagle:library:372" deviceset="+5V" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -751,6 +847,13 @@ In this library the device names are the same as the pin names of the symbols, t
 </instance>
 <instance part="SUPPLY13" gate="GND" x="33.02" y="50.8" smashed="yes">
 <attribute name="VALUE" x="31.115" y="47.625" size="1.778" layer="96"/>
+</instance>
+<instance part="U$3" gate="G$1" x="106.68" y="-71.12" smashed="yes"/>
+<instance part="SUPPLY14" gate="GND" x="93.98" y="-35.56" smashed="yes">
+<attribute name="VALUE" x="92.075" y="-38.735" size="1.778" layer="96"/>
+</instance>
+<instance part="SUPPLY15" gate="+5V" x="93.98" y="-20.32" smashed="yes" rot="R180">
+<attribute name="VALUE" x="95.885" y="-23.495" size="1.778" layer="96" rot="R180"/>
 </instance>
 </instances>
 <busses>
@@ -837,6 +940,12 @@ In this library the device names are the same as the pin names of the symbols, t
 <pinref part="SUPPLY13" gate="GND" pin="GND"/>
 <wire x1="53.34" y1="53.34" x2="33.02" y2="53.34" width="0.1524" layer="91"/>
 </segment>
+<segment>
+<pinref part="U$3" gate="G$1" pin="GND"/>
+<wire x1="95.25" y1="-30.48" x2="93.98" y2="-30.48" width="0.1524" layer="91"/>
+<pinref part="SUPPLY14" gate="GND" pin="GND"/>
+<wire x1="93.98" y1="-30.48" x2="93.98" y2="-33.02" width="0.1524" layer="91"/>
+</segment>
 </net>
 <net name="+5V" class="0">
 <segment>
@@ -864,6 +973,12 @@ In this library the device names are the same as the pin names of the symbols, t
 <wire x1="218.44" y1="60.96" x2="246.38" y2="60.96" width="0.1524" layer="91"/>
 <pinref part="SUPPLY8" gate="+5V" pin="+5V"/>
 <junction x="246.38" y="60.96"/>
+</segment>
+<segment>
+<pinref part="U$3" gate="G$1" pin="VCC"/>
+<pinref part="SUPPLY15" gate="+5V" pin="+5V"/>
+<wire x1="95.25" y1="-15.24" x2="93.98" y2="-15.24" width="0.1524" layer="91"/>
+<wire x1="93.98" y1="-15.24" x2="93.98" y2="-17.78" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="ARD_RST" class="0">
