@@ -22,5 +22,5 @@ The controller supports:<br>
 * Circuit designed in Eagle [Version 0]
 
 <p align=center>
-<img src="resources/sch_v0.png", height=200h border=2>
+<img src="resources/sch_v0.png", border=2>
 </p>
