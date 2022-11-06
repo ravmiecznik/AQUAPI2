@@ -805,15 +805,15 @@ In this library the device names are the same as the pin names of the symbols, t
 <attribute name="VALUE" x="123.19" y="91.44" size="1.778" layer="96" align="center-left"/>
 </instance>
 <instance part="U$2" gate="G$1" x="200.66" y="48.26" smashed="yes"/>
-<instance part="PH_PROBE" gate="A" x="12.7" y="35.56" smashed="yes" rot="R90">
-<attribute name="NAME" x="6.985" y="29.21" size="1.778" layer="95" rot="R90"/>
-<attribute name="VALUE" x="20.32" y="29.21" size="1.778" layer="96" rot="R90"/>
+<instance part="PH_PROBE" gate="A" x="-12.7" y="40.64" smashed="yes" rot="R90">
+<attribute name="NAME" x="-18.415" y="34.29" size="1.778" layer="95" rot="R90"/>
+<attribute name="VALUE" x="-5.08" y="34.29" size="1.778" layer="96" rot="R90"/>
 </instance>
 <instance part="SUPPLY1" gate="GND" x="33.02" y="35.56" smashed="yes">
 <attribute name="VALUE" x="31.115" y="32.385" size="1.778" layer="96"/>
 </instance>
-<instance part="SUPPLY2" gate="GND" x="17.78" y="20.32" smashed="yes">
-<attribute name="VALUE" x="15.875" y="17.145" size="1.778" layer="96"/>
+<instance part="SUPPLY2" gate="GND" x="-7.62" y="25.4" smashed="yes">
+<attribute name="VALUE" x="-9.525" y="22.225" size="1.778" layer="96"/>
 </instance>
 <instance part="SUPPLY3" gate="GND" x="246.38" y="63.5" smashed="yes">
 <attribute name="VALUE" x="244.475" y="60.325" size="1.778" layer="96"/>
@@ -824,8 +824,8 @@ In this library the device names are the same as the pin names of the symbols, t
 <instance part="SUPPLY5" gate="GND" x="170.18" y="58.42" smashed="yes">
 <attribute name="VALUE" x="168.275" y="55.245" size="1.778" layer="96"/>
 </instance>
-<instance part="SUPPLY6" gate="+5V" x="12.7" y="12.7" smashed="yes" rot="R180">
-<attribute name="VALUE" x="14.605" y="9.525" size="1.778" layer="96" rot="R180"/>
+<instance part="SUPPLY6" gate="+5V" x="-12.7" y="17.78" smashed="yes" rot="R180">
+<attribute name="VALUE" x="-10.795" y="14.605" size="1.778" layer="96" rot="R180"/>
 </instance>
 <instance part="SUPPLY7" gate="+5V" x="33.02" y="81.28" smashed="yes" rot="R180">
 <attribute name="VALUE" x="34.925" y="78.105" size="1.778" layer="96" rot="R180"/>
@@ -848,12 +848,12 @@ In this library the device names are the same as the pin names of the symbols, t
 <instance part="SUPPLY13" gate="GND" x="33.02" y="50.8" smashed="yes">
 <attribute name="VALUE" x="31.115" y="47.625" size="1.778" layer="96"/>
 </instance>
-<instance part="U$3" gate="G$1" x="106.68" y="-71.12" smashed="yes"/>
-<instance part="SUPPLY14" gate="GND" x="93.98" y="-35.56" smashed="yes">
-<attribute name="VALUE" x="92.075" y="-38.735" size="1.778" layer="96"/>
+<instance part="U$3" gate="G$1" x="66.04" y="-55.88" smashed="yes"/>
+<instance part="SUPPLY14" gate="GND" x="53.34" y="-20.32" smashed="yes">
+<attribute name="VALUE" x="51.435" y="-23.495" size="1.778" layer="96"/>
 </instance>
-<instance part="SUPPLY15" gate="+5V" x="93.98" y="-20.32" smashed="yes" rot="R180">
-<attribute name="VALUE" x="95.885" y="-23.495" size="1.778" layer="96" rot="R180"/>
+<instance part="SUPPLY15" gate="+5V" x="53.34" y="-5.08" smashed="yes" rot="R180">
+<attribute name="VALUE" x="55.245" y="-8.255" size="1.778" layer="96" rot="R180"/>
 </instance>
 </instances>
 <busses>
@@ -862,9 +862,9 @@ In this library the device names are the same as the pin names of the symbols, t
 <net name="PH_ANALOG_OUT" class="0">
 <segment>
 <pinref part="PH_PROBE" gate="A" pin="1"/>
-<wire x1="10.16" y1="33.02" x2="10.16" y2="22.86" width="0.1524" layer="91"/>
-<junction x="10.16" y="22.86"/>
-<label x="7.62" y="22.86" size="1.778" layer="95" rot="R270"/>
+<wire x1="-15.24" y1="38.1" x2="-15.24" y2="27.94" width="0.1524" layer="91"/>
+<junction x="-15.24" y="27.94"/>
+<label x="-17.78" y="27.94" size="1.778" layer="95" rot="R270"/>
 </segment>
 <segment>
 <pinref part="U$2" gate="G$1" pin="A0"/>
@@ -876,12 +876,12 @@ In this library the device names are the same as the pin names of the symbols, t
 <net name="GND" class="0">
 <segment>
 <pinref part="PH_PROBE" gate="A" pin="3"/>
-<wire x1="15.24" y1="33.02" x2="15.24" y2="22.86" width="0.1524" layer="91"/>
-<label x="17.78" y="22.86" size="1.778" layer="95"/>
-<junction x="15.24" y="22.86"/>
+<wire x1="-10.16" y1="38.1" x2="-10.16" y2="27.94" width="0.1524" layer="91"/>
+<label x="-7.62" y="27.94" size="1.778" layer="95"/>
+<junction x="-10.16" y="27.94"/>
 <pinref part="SUPPLY2" gate="GND" pin="GND"/>
-<wire x1="15.24" y1="22.86" x2="17.78" y2="22.86" width="0.1524" layer="91"/>
-<junction x="17.78" y="22.86"/>
+<wire x1="-10.16" y1="27.94" x2="-7.62" y2="27.94" width="0.1524" layer="91"/>
+<junction x="-7.62" y="27.94"/>
 </segment>
 <segment>
 <pinref part="IC1" gate="G$1" pin="GND_4"/>
@@ -942,18 +942,18 @@ In this library the device names are the same as the pin names of the symbols, t
 </segment>
 <segment>
 <pinref part="U$3" gate="G$1" pin="GND"/>
-<wire x1="95.25" y1="-30.48" x2="93.98" y2="-30.48" width="0.1524" layer="91"/>
+<wire x1="54.61" y1="-15.24" x2="53.34" y2="-15.24" width="0.1524" layer="91"/>
 <pinref part="SUPPLY14" gate="GND" pin="GND"/>
-<wire x1="93.98" y1="-30.48" x2="93.98" y2="-33.02" width="0.1524" layer="91"/>
+<wire x1="53.34" y1="-15.24" x2="53.34" y2="-17.78" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="+5V" class="0">
 <segment>
 <pinref part="PH_PROBE" gate="A" pin="2"/>
-<wire x1="12.7" y1="33.02" x2="12.7" y2="22.86" width="0.1524" layer="91"/>
-<junction x="12.7" y="22.86"/>
+<wire x1="-12.7" y1="38.1" x2="-12.7" y2="27.94" width="0.1524" layer="91"/>
+<junction x="-12.7" y="27.94"/>
 <pinref part="SUPPLY6" gate="+5V" pin="+5V"/>
-<wire x1="12.7" y1="22.86" x2="12.7" y2="15.24" width="0.1524" layer="91"/>
+<wire x1="-12.7" y1="27.94" x2="-12.7" y2="20.32" width="0.1524" layer="91"/>
 </segment>
 <segment>
 <pinref part="IC1" gate="G$1" pin="+5V_1"/>
@@ -977,8 +977,8 @@ In this library the device names are the same as the pin names of the symbols, t
 <segment>
 <pinref part="U$3" gate="G$1" pin="VCC"/>
 <pinref part="SUPPLY15" gate="+5V" pin="+5V"/>
-<wire x1="95.25" y1="-15.24" x2="93.98" y2="-15.24" width="0.1524" layer="91"/>
-<wire x1="93.98" y1="-15.24" x2="93.98" y2="-17.78" width="0.1524" layer="91"/>
+<wire x1="54.61" y1="0" x2="53.34" y2="0" width="0.1524" layer="91"/>
+<wire x1="53.34" y1="0" x2="53.34" y2="-2.54" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="ARD_RST" class="0">

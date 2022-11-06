@@ -14,9 +14,13 @@ The controller supports:<br>
 
 * Arduino MINI PRO to work with PH Proble
 <p  align=center>
-<img src="https://alselectro.files.wordpress.com/2017/05/arduinopromini000b.jpg"/, height=120h>
+<img src="https://alselectro.files.wordpress.com/2017/05/arduinopromini000b.jpg", height=120h>
 </p>
 
 * Arduino ISP programming done with RaspberryPI [<a href="https://learn.adafruit.com/program-an-avr-or-arduino-using-raspberry-pi-gpio-pins">Adafruit manual</a>]
 
 * Circuit designed in Eagle
+
+<p align=center>
+<img src="resources/sch_v0.png", height=120h border=2>
+</p>
