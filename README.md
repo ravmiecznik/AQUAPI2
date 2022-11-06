@@ -17,12 +17,17 @@ The controller supports:<br>
 <img src="resources/8chann_relay.jpeg" height=120h, border=2>
 </p>
 
-* Arduino MINI PRO to work with PH Proble
+* Arduino MINI PRO
 <p  align=center>
 <img src="https://alselectro.files.wordpress.com/2017/05/arduinopromini000b.jpg", height=120h>
 </p>
 
 * Arduino ISP programming done with RaspberryPI [<a href="https://learn.adafruit.com/program-an-avr-or-arduino-using-raspberry-pi-gpio-pins">Adafruit manual</a>]
+
+* Plotly library <a href="https://plotly.com/python/">PLOTLY</a>
+<p align=center>
+<img src="resources/plotly_plot.png", height=150h border=2>
+</p>
 
 * Circuit designed in Eagle [Version 0]
 
