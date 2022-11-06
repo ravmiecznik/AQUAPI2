@@ -26,7 +26,7 @@ The controller supports:<br>
 
 * Plotly library <a href="https://plotly.com/python/">PLOTLY</a>
 <p align=center>
-<img src="resources/plotly_plot.png", height=150h border=2>
+<img src="resources/plotly_plot.png", width=100% border=2>
 </p>
 
 * Circuit designed in Eagle [Version 0]
