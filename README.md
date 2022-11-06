@@ -1,21 +1,26 @@
 # AQUAPI2
 
-Aquarium controller based on RaspberryPi and Arduino.<br>
+## Aquarium controller based on RaspberryPi Zero2 and Arduino.<br>
 The controller supports:<br>
 
 * PH control with use of <a href=https://botland.store/gravity-temperature-sensors/5874-dfrobot-gravity-ph-analog-sensormeter-5903351243513.html>DFORBOT PROBE</a>
+and CO2 injection system equipped with CO2 electric valve
 <br>
 <p  align=center>
 <img src="https://cdn2.botland.store/111204-pdt_540/dfrobot-gravity-ph-analog-sensormeter.jpg" height=120h>
+<img src="resources/co2_system.png" height=120h>
 </p>
 
 
-* DS12B20 digital thermometer sensor [<a href="https://www.circuitbasics.com/raspberry-pi-ds18b20-temperature-sensor-tutorial/">how to</a>]
 
-* 8 channel Relay 
+* Temperature reading with DS12B20 digital thermometer sensor [<a href="https://www.circuitbasics.com/raspberry-pi-ds18b20-temperature-sensor-tutorial/">how to</a>] or any analog thermometer accessible via Arduino board
+
+* Control devices and lighting with 8 channel Relay
 <p align=center>
 <img src="resources/8chann_relay.jpeg" height=120h, border=2>
 </p>
+
+## Other components and software
 
 * Arduino MINI PRO
 <p  align=center>
