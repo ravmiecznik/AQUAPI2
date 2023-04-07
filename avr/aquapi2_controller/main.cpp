@@ -16,6 +16,34 @@
 
 Usart* Serial;
 
+void get_input(uint16_t& cnt){
+	CircBuffer cmd_buff(100);
+	printf("root>");
+	for(char c=Serial->get(); c != '\r'; c=Serial->get()){
+		if(c){
+			if(cmd_buff.put(c)){
+				Serial->Putchar(c);
+			}
+			if(c == 127){
+				cmd_buff.pop_last(2);
+				printf("\33[D"); // mv cursor left
+				printf("\33[J"); // clear char
+				PORTB ^= (1<<PB5);
+			}
+
+		}
+//				printf("%u ", c);
+	}
+	printf("\n\rI got: ");
+	while(cmd_buff.available()){
+
+		Serial->Putchar(cmd_buff.get());
+	}
+	cmd_buff.flush();
+	cnt = 0;
+	while(not Serial->available());
+	Serial->rx_buffer.flush();
+}
 
 /****************************************************************/
 /*
@@ -66,7 +94,6 @@ int main(void)
 	char buf[10];
 	DDRB |= (1<<PB5);
 	uint16_t cnt = 0;
-	CircBuffer cmd_buff(100);
     while (true)
     {
     	_delay_ms(1);
@@ -83,34 +110,9 @@ int main(void)
 			printf("thermo %u\n\r", adc.get_adc_results().adc5);
 			printf("------------------\n\r");
     	}
-//		_delay_ms(100);
+
 		if(serial.available()){
-			printf("root>");
-			for(char c=serial.get(); c != '\r'; c=serial.get()){
-				if(c){
-					if(cmd_buff.put(c)){
-						serial.Putchar(c);
-					}
-					if(c == 127){
-						cmd_buff.pop_last(2);
-						printf("\33[D"); // mv cursor left
-						printf("\33[J"); // clear char
-						PORTB ^= (1<<PB5);
-					}
-
-				}
-//				printf("%u ", c);
-			}
-			printf("\n\rI got: ");
-			while(cmd_buff.available()){
-
-				serial.Putchar(cmd_buff.get());
-			}
-			cmd_buff.flush();
-			cnt = 0;
-			while(not serial.available());
-			serial.rx_buffer.flush();
-
+			get_input(cnt);
 		}
 
 
