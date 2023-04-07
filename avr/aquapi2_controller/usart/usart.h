@@ -85,6 +85,7 @@ public:
 	uint16_t get_uint();
 	char* get_all(char* ext_buff);
 	uint32_t available();
+	uint32_t tx_data_pending() {return tx_buffer.available();};
 };
 
 

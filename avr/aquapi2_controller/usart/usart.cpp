@@ -8,6 +8,7 @@
  */
 
 #include "usart.h"
+#include "../common/common.h"
 #include <avr/interrupt.h>
 #include <avr/delay.h>
 #include <string.h>
@@ -59,13 +60,18 @@ void Usart::setup_registers(){
 }
 
 void Usart::Putchar(char c){
-	while ( tx_buffer.available == tx_buffer.size ) {
-		;/* wait for free space in buffer */
-	}
-	tx_buffer.put((uint8_t)c);
+	// try unitl succeeded
+
+	while( not tx_buffer.put((uint8_t)c));
+
 	/* enable UDRE interrupt */
 	*uart_control_register_B |= _BV(udrie);
-	_delay_us(100);
+
+	/* wait if buffer free space is less than 20% */
+	while(tx_buffer.free_space() < 4*tx_buffer.size/5){
+		delay_cpu_cycles(10);
+	}
+
 }
 
 void Usart::uart_init(uint32_t baudrate){
@@ -95,21 +101,9 @@ char Usart::get(){
 	return rx_buffer.get();
 }
 
-void Usart::get(uint32_t amount, uint8_t* ext_buffer){
-	rx_buffer.get(amount, ext_buffer);
-}
-
-char* Usart::get(uint32_t amount, char* ext_buffer){
-	rx_buffer.get(amount, ext_buffer);
-	return ext_buffer;
-}
-
-char* Usart::get_all(char* ext_buff){
-	return rx_buffer.get_all(ext_buff);
-}
 
 uint32_t Usart::available(){
-		return rx_buffer.available;
+		return rx_buffer.available();
 }
 
 void Usart::puts_p(const char* str, char c){
@@ -155,7 +149,7 @@ Purpose:  called when the UART is ready to transmit the next byte
 **************************************************************************/
 {
 	if(UART0_STATUS & (1<<UDRE0)){
-		if ( tx0_buffer->available){
+		if ( tx0_buffer->available()){
 			UART0_DATA = tx0_buffer->get();
 		} else {
 			UART0_CONTROL &= ~_BV(UART0_UDRIE);
