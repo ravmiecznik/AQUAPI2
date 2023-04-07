@@ -3,6 +3,9 @@
  *
  *  Created on: Mar 27, 2023
  *      Author: rafal
+ *
+ *
+ * Tested on Atmega328P
  */
 
 #ifndef AVR_ADC_AVR_ADC_H_

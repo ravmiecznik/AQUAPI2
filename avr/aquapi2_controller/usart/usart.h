@@ -16,7 +16,7 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <util/crc16.h>
-
+#include <avr/pgmspace.h>
 
 //this macro will create string in PGMSPACE with the same content as name like: rav = "rav"
 #define P(_NAME) const char PROGMEM _NAME [] = #_NAME
