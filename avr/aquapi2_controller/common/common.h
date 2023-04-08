@@ -31,7 +31,7 @@ void my__assert(const char *__func, const char *__file, int __lineno, const char
  *
   struct admux_s{
 	 uint8_t mux: 	4;	// channel selection
-	 bool reserved: 	1;
+	 bool reserved: 1;
 	 bool adlar: 	1;	// ADC left adjustment
 	 uint8_t refs: 	2;	// select source voltage reference
   };
