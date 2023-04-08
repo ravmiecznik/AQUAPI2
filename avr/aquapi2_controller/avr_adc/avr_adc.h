@@ -19,129 +19,70 @@
 
 
 /*
- * PRR – Power Reduction Register
+ * ADMUX register structure
  */
-union _prr_reg {
-private:
-	uint8_t reg;
-public:
-	struct{
-		bool pradc: 	1;	// shut down ADC
-		bool prusart0: 	1;	// shut down USART
-		bool prspi: 	1;	// shut down SPI
-		bool prtim1: 	1;	// shut down Timer
-		bool reserved: 	1;
-		bool prtim0: 	1;	// shut down Timer
-		bool prtim2: 	1;	// shut down Timer
-		bool prtwi: 	1;	// shut down TWI
-	};
-	operator uint8_t(){
-		return reg;
-	}
-
-	void operator =(uint8_t val){
-		reg = val;
-	}
+struct admux_s{
+	uint8_t mux: 	4;	// channel selection
+	bool reserved: 	1;
+	bool adlar: 	1;	// ADC left adjustment
+	uint8_t refs: 	2;	// select source voltage reference
 };
 
 
-union _admux_reg {
-private:
-	uint8_t reg;
-public:
-	struct{
-		uint8_t mux: 	4;	// channel selection
-		bool reserved: 	1;
-		bool adlar: 	1;	// ADC left adjustment
-		uint8_t refs: 	2;	// select source voltage reference
-	};
-	operator uint8_t(){
-		return reg;
-	}
-
-	void operator =(uint8_t val){
-		reg = val;
-	}
+/*
+ * PRR – Power Reduction Register Structure
+ */
+struct prr_s{
+	bool pradc: 	1;	// shut down ADC
+	bool prusart0: 	1;	// shut down USART
+	bool prspi: 	1;	// shut down SPI
+	bool prtim1: 	1;	// shut down Timer
+	bool reserved: 	1;
+	bool prtim0: 	1;	// shut down Timer
+	bool prtim2: 	1;	// shut down Timer
+	bool prtwi: 	1;	// shut down TWI
 };
+
+
 
 /*
  * ADCSRA – ADC Control and Status Register A
  */
-union _adcsra_reg {
-private:
-	uint8_t reg;
-public:
-	struct{
-		uint8_t adps: 	3;	// system clock prescaler selector
-		bool adie: 		1;	// enable ADC interrupt
-		bool adif: 		1;	// ADC interrupt flag
-		bool adate: 	1;	// enable auto trigger of ADC based on ADTS configuration
-		bool adsc: 		1;	// start ADC conversion
-		bool aden: 		1;	// enable ADC
-	};
-	operator uint8_t(){
-		return reg;
-	}
-
-	void operator =(uint8_t val){
-		reg = val;
-	}
+struct adcsra_s{
+	uint8_t adps: 	3;	// system clock prescaler selector
+	bool adie: 		1;	// enable ADC interrupt
+	bool adif: 		1;	// ADC interrupt flag
+	bool adate: 	1;	// enable auto trigger of ADC based on ADTS configuration
+	bool adsc: 		1;	// start ADC conversion
+	bool aden: 		1;	// enable ADC
 };
 
 
 /*
  * ADCSRB – ADC Control and Status Register B
  */
-union _adcsrb_reg {
-private:
-	uint8_t reg;
-public:
-	struct{
-		uint8_t adts:	 	3;	// auto-trigger source
-		uint8_t reserved:	3;
-		bool acme:	 		1;	// enable analog comparator
-		bool reserved2:	 	1;
-	};
-	operator uint8_t(){
-		return reg;
-	}
-
-	void operator =(uint8_t val){
-		reg = val;
-	}
+struct adcsrb_s{
+	uint8_t adts:	 	3;	// auto-trigger source
+	uint8_t reserved:	3;
+	bool acme:	 		1;	// enable analog comparator
+	bool reserved2:	 	1;
 };
-
 
 
 /*
  * DIDR0 – Digital Input Disable Register 0
  */
-union _didr0_reg{
-private:
-	uint8_t reg;
-public:
-	struct{
-		bool adc0d:		1;
-		bool adc1d:		1;
-		bool adc2d:		1;
-		bool adc3d:		1;
-		bool adc4d:		1;
-		bool adc5d:		1;
-		bool reserved2:	1;
-	};
 
-	operator uint8_t(){
-		return reg;
-	}
-
-	void operator =(uint8_t val){
-		reg = val;
-	}
-
-	void operator|=(uint8_t val){
-		reg |= val;
-	}
+struct didr0_s{
+	bool adc0d:		1;
+	bool adc1d:		1;
+	bool adc2d:		1;
+	bool adc3d:		1;
+	bool adc4d:		1;
+	bool adc5d:		1;
+	bool reserved2:	1;
 };
+
 
 
 namespace adc
@@ -177,10 +118,10 @@ namespace adc
 	};
 
 	//create register references
-	extern _admux_reg& 	admux;
-	extern _adcsra_reg& adcsra;
-	extern _adcsrb_reg& adcsrb;
-	extern _didr0_reg& didr0;
+	extern admux_s& 	admux;
+	extern adcsra_s& 	adcsra;
+	extern adcsrb_s& 	adcsrb;
+	extern didr0_s&	 	didr0;
 	extern volatile uint16_t ADC_results[8];
 
 	struct adc_results_s {

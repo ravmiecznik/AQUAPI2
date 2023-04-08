@@ -45,11 +45,23 @@ namespace adc {
 	}
 
 
-	_admux_reg& admux = (_admux_reg&)ADMUX;
-	_adcsra_reg& adcsra = (_adcsra_reg&)ADCSRA;
-	_adcsrb_reg& adcsrb = (_adcsrb_reg&)ADCSRB;
-	_didr0_reg& didr0 = (_didr0_reg&)DIDR0;
-	_prr_reg& prr = (_prr_reg&)PRR;
+	/*
+	 * define registers as generic_register unions
+	 */
+	generic_register<admux_s>& admux_u		= (generic_register<admux_s>&)ADMUX;
+	generic_register<adcsra_s>& adcsra_u 	= (generic_register<adcsra_s>&)ADCSRA;
+	generic_register<adcsrb_s>& adcsrb_u 	= (generic_register<adcsrb_s>&)ADCSRB;
+	generic_register<didr0_s>& didr0_u 		= (generic_register<didr0_s>&)DIDR0;
+	generic_register<prr_s>& prr_u 			= (generic_register<prr_s>&)PRR;
+
+	/*
+	 * Interface to access bitfields of registers
+	 */
+	admux_s& admux 		= admux_u.bitfield;
+	adcsra_s& adcsra 	= adcsra_u.bitfield;
+	adcsrb_s& adcsrb 	= adcsrb_u.bitfield;
+	didr0_s& didr0 		= didr0_u.bitfield;
+	prr_s& prr 			= prr_u.bitfield;
 
 
 	/*
@@ -75,14 +87,14 @@ namespace adc {
 	 * Start and get single ADC conversion
 	 */
 	uint16_t Adc::get_adc(uint8_t mux, uint16_t samples) {
-		uint8_t didr_old = didr0;
-		didr0 = didr0 | (1<<mux);
+		uint8_t didr_old = didr0_u;
+		didr0_u = didr0_u | (1<<mux);
 		uint16_t mean = 0;
 		Assert(samples < ( (1<<8*(sizeof(uint16_t) - sizeof(uint8_t))) -1 )); // overflow protection
 		for(uint8_t i=0; i<samples; ++i){
 			start_adc(mux);
 			while(adcsra.adsc == 1);
-			didr0 = didr_old;
+			didr0_u = didr_old;
 			mean += ADC;
 		}
 		Adc::adc_results[mux] = mean;
@@ -94,7 +106,7 @@ namespace adc {
 	 * Select channels for ADC
 	 */
 	void Adc::select_channels(uint8_t bitmask){
-		didr0 |= bitmask;	// disable digital function of pins ADC5..0
+		didr0_u |= bitmask;	// disable digital function of pins ADC5..0
 		channels_bitmask |= bitmask;
 	}
 
@@ -102,7 +114,7 @@ namespace adc {
 	 * Select single channel for ADC
 	 */
 	void Adc::select_channel(uint8_t chann){
-		didr0 |= (1<<chann);
+		didr0_u |= (1<<chann);
 		channels_bitmask |= (1<<chann);
 		current_channel = chann;
 		DDRC &= ~(1<<chann); 	// should be solved by pull-up resistor
