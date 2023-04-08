@@ -12,6 +12,7 @@
 #include <assert.h>
 #include "usart/usart.h"
 #include "avr_adc/avr_adc.h"
+#include "atm_timer/atm_timer.h"
 
 
 Usart* Serial;
@@ -73,6 +74,7 @@ UsartConfig get_usart_config(){
 #define DELAY 500
 
 using namespace adc;
+using namespace timer;
 
 int main(void)
 {
@@ -82,18 +84,22 @@ int main(void)
 	setup_stdout_for_printf();
 
 
-	Adc::enable();
-	Adc::select_channel(0);
-	Adc::select_channel(1);
-	Adc::select_channel(2);
-	Adc::select_channel(3);
-	Adc::select_channel(4);
-	Adc::select_channel(5);
-	Adc::adc_on_interrupt(prescaler::div_128, vref::avcc_ext_cap, 10);
-	AdcHandler<FunctionPtr<void()>> adc( [](){printf("isr_h");} );
+//	Adc::enable();
+//	Adc::select_channel(0);
+//	Adc::select_channel(1);
+//	Adc::select_channel(2);
+//	Adc::select_channel(3);
+//	Adc::select_channel(4);
+//	Adc::select_channel(5);
+//	Adc::adc_on_interrupt(prescaler::div_128, vref::avcc_ext_cap, 10);
+//	AdcHandler<FunctionPtr<void()>> adc( [](){printf("isr_h");} );
+
 	char buf[10];
 	DDRB |= (1<<PB5);
 	uint16_t cnt = 0;
+
+	Timer1 t1(ClockSelection::clk_d1024);
+
     while (true)
     {
     	_delay_ms(1);
@@ -101,14 +107,9 @@ int main(void)
 			printf("\033[2J"); // clean screen
 			printf("\033[H");	// move cursor HOME
 
-			printf("------------------\n\r");
-			printf("thermo %u\n\r", adc.get_adc_results().adc0);
-			printf("thermo %u\n\r", adc.get_adc_results().adc1);
-			printf("thermo %u\n\r", adc.get_adc_results().adc2);
-			printf("thermo %u\n\r", adc.get_adc_results().adc3);
-			printf("thermo %u\n\r", adc.get_adc_results().adc4);
-			printf("thermo %u\n\r", adc.get_adc_results().adc5);
-			printf("------------------\n\r");
+			printf("Timer branch\n\r");
+			printf("cs %u\n\r", ClockSelection::no_clock);
+			printf("tcnt %lu\n\r", TCNT1);
     	}
 
 		if(serial.available()){
