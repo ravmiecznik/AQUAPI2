@@ -11,12 +11,18 @@
 #include "common.h"
 #include "../usart/usart.h"
 
-FuncPtr<void()> null_function;
-
 
 void delay_cpu_cycles(uint16_t cycles){
 	for(uint16_t i=0; i<cycles; ++i)
 		asm volatile ("nop");
+}
+
+
+/*
+ * Null function
+ */
+void null_function(){
+
 }
 
 

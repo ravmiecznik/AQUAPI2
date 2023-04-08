@@ -13,9 +13,8 @@
 
 
 template<typename Func>
-using FuncPtr = Func*;
+using FunctionPtr = Func*;
 
-extern FuncPtr<void()> null_function;
 
 void delay_cpu_cycles(uint16_t c);
 
@@ -58,5 +57,26 @@ public:
 	}
 };
 
+
+/*
+ * Null function
+ */
+void null_function();
+
+template<class ArgsType, class RetType=void>
+class ISRFunctor{
+private:
+	FunctionPtr<RetType(ArgsType)> fptr = null_function;
+	RetType result;
+public:
+	ISRFunctor(FunctionPtr<RetType(ArgsType)> f): fptr(f) {};
+	ISRFunctor& operator ()(const ArgsType args) {
+		result = fptr(args);
+		return *this;
+	}
+	RetType get_result(){
+		return result;
+	}
+};
 
 #endif /* COMMON_COMMON_H_ */
