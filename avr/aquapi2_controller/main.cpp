@@ -10,9 +10,10 @@
 #include <avr/pgmspace.h>
 #include <stdio.h>
 #include <assert.h>
+
+#include "atm_timer/atm_timer16bit.h"
 #include "usart/usart.h"
 #include "avr_adc/avr_adc.h"
-#include "atm_timer/atm_timer.h"
 
 
 Usart* Serial;
@@ -98,7 +99,9 @@ int main(void)
 	DDRB |= (1<<PB5);
 	uint16_t cnt = 0;
 
-	Timer1 t1(ClockSelection::clk_d1024);
+//	Timer1 t1();
+	Timer1 t1;
+//	t1.ocia_int_enable();
 
     while (true)
     {
@@ -109,7 +112,7 @@ int main(void)
 
 			printf("Timer branch\n\r");
 			printf("cs %u\n\r", ClockSelection::no_clock);
-			printf("tcnt %lu\n\r", TCNT1);
+			printf("tcnt %lu\n\r", t1.get());
     	}
 
 		if(serial.available()){

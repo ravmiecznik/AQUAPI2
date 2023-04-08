@@ -5,8 +5,8 @@
  *      Author: rafal
  */
 
-#ifndef ATM_TIMER_ATM_TIMER_H_
-#define ATM_TIMER_ATM_TIMER_H_
+#ifndef ATM_TIMER_ATM_TIMER16BIT_H_
+#define ATM_TIMER_ATM_TIMER16BIT_H_
 
 #include <stdint.h>
 #include <avr/io.h>
@@ -14,7 +14,10 @@
 
 namespace timer {
 
-
+	/*
+	 * Compare Output Mode, no PWM
+	 * TODO: not used
+	 */
 	enum class CompareOutMode_nonPWM {
 		normal_pins_disconnected= 	0,
 		toggle_on_compare_match= 	1,
@@ -25,6 +28,7 @@ namespace timer {
 
 	/*
 	 * Compare Output Mode, Fast PWM
+	 * TODO: not used
 	 */
 	enum class CompareOutMode_fastPWM {
 		normal_pins_disconnected= 			0,
@@ -37,13 +41,8 @@ namespace timer {
 
 
 	/*
-	 * Compare Output Mode, Phase Correct and Phase and Frequency Correct PWM
+	 * Select clock source or clock prescaler (FCPU divider)
 	 */
-	enum class CompareOutMode_phcPWM {
-		// to be implemented
-	};
-
-
 	enum class ClockSelection {
 		no_clock,
 		clk_d1,
@@ -84,6 +83,7 @@ namespace timer {
 
 	/*
 	 * Sub register WGM 1 0
+	 * TODO: not used
 	 */
 	union wgm10 {
 	private:
@@ -98,6 +98,7 @@ namespace timer {
 
 	/*
 	 * Sub register WGM 3 2
+	 * TODO: not used
 	 */
 	union wgm32 {
 	private:
@@ -115,8 +116,8 @@ namespace timer {
 	 *
 	 */
 	struct tccra_s{
-		uint8_t wgm_10:				2;
-		uint8_t reserved:			2;
+		uint8_t wgm_10:		2; //TODO: how to acces lower nibble, bits 1 0 of wgm enum ?
+		uint8_t reserved:	2;
 		uint8_t comb: 		2; //Control the output compare pins OCA
 		uint8_t coma: 		2; //Control the output compare pins OCB
 	};
@@ -127,11 +128,11 @@ namespace timer {
 	 *
 	 */
 	struct tccrb_s{
-		ClockSelection cs:			3;
-		uint8_t wgm_32:				2;
-		bool reserved:				1;
-		uint8_t ices:		 		2;
-		uint8_t icnc:		 		2;
+		ClockSelection cs:	3;
+		uint8_t wgm_32:		2;  //TODO: how to acces upper nibble, bits 3 2 of wgm enum ?
+		bool reserved:		1;
+		uint8_t ices:		2;
+		uint8_t icnc:		2;
 	};
 
 	/*
@@ -148,26 +149,51 @@ namespace timer {
 		uint8_t reserved2:	2;
 	};
 
-	class Timer1{
-	private:
-		generic_register<tccra_s>& tccra_u		= (generic_register<tccra_s>&)TCCR1A;
-		generic_register<tccrb_s>& tccrb_u		= (generic_register<tccrb_s>&)TCCR1B;
+
+	// clarify types needed
+	typedef generic_register<tccra_s>& tccra_r;	//reference register type
+	typedef generic_register<tccrb_s>& tccrb_r;	//reference register type
+	typedef generic_register<timsk_s>& timsk_r;	//reference register type
+	typedef uint16_t& reg_ref;					//register reference
+
+
+	/*
+	 * Base 16bit Timer
+	 */
+	class Timer_16bit{
+	protected:
+		tccra_r tccra_u;	//union access
+		tccrb_r tccrb_u;	//union access
+		timsk_r timsk_u;	//union access
 
 		/*
 		 * Interface to access bitfields of registers
 		 */
-		tccrb_s& tccrb 		= tccrb_u.bitfield;
-		tccra_s& tccra 		= tccra_u.bitfield;
+		tccrb_s& tccrb;
+		tccra_s& tccra;
+		timsk_s& timsk;
+		reg_ref& tcnt;
+		reg_ref& ocra;		//otuput compare register A
+
+		// assign registers to timer
+		Timer_16bit(tccra_r tccra_arg, tccrb_r tccrb_arg, timsk_r timsk_arg, reg_ref& tcnt_arg, reg_ref ocra_arg);
+		void start_timer(ClockSelection cs= ClockSelection::clk_d1);
+
+	public:
+		virtual void ocia_int_enable(uint16_t ocra=0);  //TODO: assign ISR handler in int_enable function
+		virtual uint16_t get();
+	};
+
+	class Timer1: public Timer_16bit{
 	public:
 		/*
 		 * Start timer with clock prescaler = 1 by default
 		 */
-		Timer1(ClockSelection cs= ClockSelection::clk_d1){
-			tccrb_u = 0;		// clear all settings
-			tccra_u = 0;		// clear all settings
-			tccrb.cs = cs;
-			TCNT1 = 0;
-		}
+		using Timer_16bit::Timer_16bit;
+		Timer1();
+		Timer1(ClockSelection cs);
+
+		// virtual ~Timer1() {};  // !!! virtual destructor not supported with avr-gcc
 	};
 
 }
@@ -175,4 +201,4 @@ namespace timer {
 
 
 
-#endif /* ATM_TIMER_ATM_TIMER_H_ */
+#endif /* ATM_TIMER_ATM_TIMER16BIT_H_ */
