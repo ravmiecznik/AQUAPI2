@@ -90,7 +90,7 @@ int main(void)
 	Adc::select_channel(4);
 	Adc::select_channel(5);
 	Adc::adc_on_interrupt(prescaler::div_128, vref::avcc_ext_cap, 10);
-	Adc adc;
+	AdcHandler<FunctionPtr<void()>> adc( [](){printf("isr_h");} );
 	char buf[10];
 	DDRB |= (1<<PB5);
 	uint16_t cnt = 0;

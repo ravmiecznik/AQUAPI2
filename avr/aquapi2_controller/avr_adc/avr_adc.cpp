@@ -9,14 +9,10 @@
 #include <avr/delay.h>
 #include <avr/io.h>
 #include <stdarg.h>
+#include <stdio.h>
 #include "avr_adc.h"
 #include "../common/common.h"
 
-#include <stdio.h>
-
-
-template<class ADC_interrupt_dtype>
-FuncPtr<void(ADC_interrupt_dtype)> ADC_interrupt_handler = nullptr;
 
 
 namespace adc {

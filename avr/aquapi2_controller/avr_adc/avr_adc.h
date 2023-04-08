@@ -135,6 +135,7 @@ namespace adc
 				uint16_t adc7;
 			};
 
+//	template<typename ISR_ARGS, typename ISR_RETT>
 	class Adc
 	{
 	private:
@@ -157,6 +158,18 @@ namespace adc
 		static uint8_t get_active_channels() {return channels_bitmask;};
 		volatile static uint8_t get_samples_num() {return samples_num;};
 	};
+
+	template<typename FunctionT>
+	class AdcHandler: public Adc{
+
+		FunctionT isr_handler;
+	public:
+		AdcHandler() {};
+		AdcHandler(FunctionT fptr): isr_handler(fptr) {};
+	};
+
+
+//	typedef AdcT<void, void> Adc;
 
 }
 #endif /* AVR_ADC_AVR_ADC_H_ */

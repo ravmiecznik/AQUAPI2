@@ -63,6 +63,11 @@ public:
  */
 void null_function();
 
+template<typename InT, typename RetT>
+RetT null_function_template(InT){
+
+}
+
 template<class ArgsType, class RetType=void>
 class ISRFunctor{
 private:
