@@ -25,7 +25,7 @@ void my__assert(const char *__func, const char *__file, int __lineno, const char
 
 /*
  * Generic register.
- * Allows access of bitfields of register.
+ * Allows RW access of bitfields of register.
  *
  * Example:
  *
@@ -43,7 +43,14 @@ union generic_register{
 private:
 	uint8_t reg;
 public:
+	/*
+	 * Register bits
+	 */
 	S bitfield;
+
+	/*
+	 * Operations on register
+	 */
 	operator uint8_t(){
 		return reg;
 	}
