@@ -23,7 +23,7 @@
  */
 struct admux_s{
 	uint8_t mux: 	4;	// channel selection
-	bool reserved: 	1;
+	bool: 			1;	// reserved unused field
 	bool adlar: 	1;	// ADC left adjustment
 	uint8_t refs: 	2;	// select source voltage reference
 };
@@ -37,7 +37,7 @@ struct prr_s{
 	bool prusart0: 	1;	// shut down USART
 	bool prspi: 	1;	// shut down SPI
 	bool prtim1: 	1;	// shut down Timer
-	bool reserved: 	1;
+	bool : 			1;	// reserved
 	bool prtim0: 	1;	// shut down Timer
 	bool prtim2: 	1;	// shut down Timer
 	bool prtwi: 	1;	// shut down TWI
@@ -63,9 +63,9 @@ struct adcsra_s{
  */
 struct adcsrb_s{
 	uint8_t adts:	 	3;	// auto-trigger source
-	uint8_t reserved:	3;
+	uint8_t :			3;	// reserved
 	bool acme:	 		1;	// enable analog comparator
-	bool reserved2:	 	1;
+	bool :			 	1;	// reserved
 };
 
 
@@ -80,7 +80,7 @@ struct didr0_s{
 	bool adc3d:		1;
 	bool adc4d:		1;
 	bool adc5d:		1;
-	bool reserved2:	1;
+	bool :			1;	// reserved
 };
 
 
