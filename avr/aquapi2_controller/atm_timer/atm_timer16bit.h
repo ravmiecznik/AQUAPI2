@@ -116,10 +116,10 @@ namespace timer {
 	 *
 	 */
 	struct tccra_s{
-		uint8_t wgm_10:		2; //TODO: how to acces lower nibble, bits 1 0 of wgm enum ?
-		uint8_t reserved:	2;
-		uint8_t comb: 		2; //Control the output compare pins OCA
-		uint8_t coma: 		2; //Control the output compare pins OCB
+		uint8_t wgm_10:		2; // TODO: how to acces lower nibble, bits 1 0 of wgm enum ?
+		uint8_t :			2; // reserved
+		uint8_t comb: 		2; // Control the output compare pins OCA
+		uint8_t coma: 		2; // Control the output compare pins OCB
 	};
 
 	/*
@@ -130,7 +130,7 @@ namespace timer {
 	struct tccrb_s{
 		ClockSelection cs:	3;
 		uint8_t wgm_32:		2;  //TODO: how to acces upper nibble, bits 3 2 of wgm enum ?
-		bool reserved:		1;
+		bool :				1;	// reserved
 		uint8_t ices:		2;
 		uint8_t icnc:		2;
 	};
@@ -144,9 +144,9 @@ namespace timer {
 		bool toie: 			1;
 		bool ociea:			1;
 		bool ocieb: 		1;
-		uint8_t reserved:	2;
+		uint8_t:			2;	// reserved
 		bool icie1:			1;
-		uint8_t reserved2:	2;
+		uint8_t:			2;	// reserved
 	};
 
 
@@ -191,14 +191,16 @@ namespace timer {
 		 */
 		using Timer_16bit::Timer_16bit;
 		Timer1();
-		Timer1(ClockSelection cs);
+		Timer1(ClockSelection cs= ClockSelection::clk_d1);
 
 		// virtual ~Timer1() {};  // !!! virtual destructor not supported with avr-gcc
 	};
 
 }
 
-
+// useful example
+// Access TCNT1 register
+// volatile uint16_t& TCNT1 = *(uint16_t*)0x84;
 
 
 #endif /* ATM_TIMER_ATM_TIMER16BIT_H_ */
