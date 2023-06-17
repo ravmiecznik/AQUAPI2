@@ -20,76 +20,77 @@
 //TODO: perhaps it may be better to do reinterpret_cast of registers ?
 //TODO: admux_s& admux_r = reinterpret_cast<admux_s&>(ADMUX);
 
-
-/*
- * ADMUX register structure
- */
-struct admux_s{
-	uint8_t mux: 	4;	// channel selection
-	bool: 			1;	// reserved unused field
-	bool adlar: 	1;	// ADC left adjustment
-	uint8_t refs: 	2;	// select source voltage reference
-};
-
-
-/*
- * PRR – Power Reduction Register Structure
- */
-struct prr_s{
-	bool pradc: 	1;	// shut down ADC
-	bool prusart0: 	1;	// shut down USART
-	bool prspi: 	1;	// shut down SPI
-	bool prtim1: 	1;	// shut down Timer
-	bool : 			1;	// reserved
-	bool prtim0: 	1;	// shut down Timer
-	bool prtim2: 	1;	// shut down Timer
-	bool prtwi: 	1;	// shut down TWI
-};
-
-
-
-/*
- * ADCSRA – ADC Control and Status Register A
- */
-struct adcsra_s{
-	uint8_t adps: 	3;	// system clock prescaler selector
-	bool adie: 		1;	// enable ADC interrupt
-	bool adif: 		1;	// ADC interrupt flag
-	bool adate: 	1;	// enable auto trigger of ADC based on ADTS configuration
-	bool adsc: 		1;	// start ADC conversion
-	bool aden: 		1;	// enable ADC
-};
-
-
-/*
- * ADCSRB – ADC Control and Status Register B
- */
-struct adcsrb_s{
-	uint8_t adts:	 	3;	// auto-trigger source
-	uint8_t :			3;	// reserved
-	bool acme:	 		1;	// enable analog comparator
-	bool :			 	1;	// reserved
-};
-
-
-/*
- * DIDR0 – Digital Input Disable Register 0
- */
-
-struct didr0_s{
-	bool adc0d:		1;
-	bool adc1d:		1;
-	bool adc2d:		1;
-	bool adc3d:		1;
-	bool adc4d:		1;
-	bool adc5d:		1;
-	bool :			1;	// reserved
-};
-
-
-
 namespace adc
 {
+
+	/*
+	 * ADMUX register structure
+	 */
+	struct admux_s{
+		uint8_t mux: 	4;	// channel selection
+		bool: 			1;	// reserved unused field
+		bool adlar: 	1;	// ADC left adjustment
+		uint8_t refs: 	2;	// select source voltage reference
+	};
+
+
+	/*
+	 * PRR – Power Reduction Register Structure
+	 */
+	struct prr_s{
+		bool pradc: 	1;	// shut down ADC
+		bool prusart0: 	1;	// shut down USART
+		bool prspi: 	1;	// shut down SPI
+		bool prtim1: 	1;	// shut down Timer
+		bool : 			1;	// reserved
+		bool prtim0: 	1;	// shut down Timer
+		bool prtim2: 	1;	// shut down Timer
+		bool prtwi: 	1;	// shut down TWI
+	};
+
+
+
+	/*
+	 * ADCSRA – ADC Control and Status Register A
+	 */
+	struct adcsra_s{
+		uint8_t adps: 	3;	// system clock prescaler selector
+		bool adie: 		1;	// enable ADC interrupt
+		bool adif: 		1;	// ADC interrupt flag
+		bool adate: 	1;	// enable auto trigger of ADC based on ADTS configuration
+		bool adsc: 		1;	// start ADC conversion
+		bool aden: 		1;	// enable ADC
+	};
+
+
+	/*
+	 * ADCSRB – ADC Control and Status Register B
+	 */
+	struct adcsrb_s{
+		uint8_t adts:	 	3;	// auto-trigger source
+		uint8_t :			3;	// reserved
+		bool acme:	 		1;	// enable analog comparator
+		bool :			 	1;	// reserved
+	};
+
+
+	/*
+	 * DIDR0 – Digital Input Disable Register 0
+	 */
+
+	struct didr0_s{
+		bool adc0d:		1;
+		bool adc1d:		1;
+		bool adc2d:		1;
+		bool adc3d:		1;
+		bool adc4d:		1;
+		bool adc5d:		1;
+		bool :			1;	// reserved
+	};
+
+
+
+
 
 	enum class vref: uint8_t {
 		aref = 0,
@@ -171,8 +172,6 @@ namespace adc
 		AdcHandler(FunctionT fptr): isr_handler(fptr) {};
 	};
 
-
-//	typedef AdcT<void, void> Adc;
 
 }
 #endif /* AVR_ADC_AVR_ADC_H_ */

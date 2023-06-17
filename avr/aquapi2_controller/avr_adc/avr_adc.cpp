@@ -44,11 +44,11 @@ namespace adc {
 	/*
 	 * define registers as generic_register unions
 	 */
-	generic_register<admux_s>& admux_u		= (generic_register<admux_s>&)ADMUX;
-	generic_register<adcsra_s>& adcsra_u 	= (generic_register<adcsra_s>&)ADCSRA;
-	generic_register<adcsrb_s>& adcsrb_u 	= (generic_register<adcsrb_s>&)ADCSRB;
-	generic_register<didr0_s>& didr0_u 		= (generic_register<didr0_s>&)DIDR0;
-	generic_register<prr_s>& prr_u 			= (generic_register<prr_s>&)PRR;
+	register_descriptor<admux_s>& admux_u		= (register_descriptor<admux_s>&)ADMUX;
+	register_descriptor<adcsra_s>& adcsra_u 	= (register_descriptor<adcsra_s>&)ADCSRA;
+	register_descriptor<adcsrb_s>& adcsrb_u 	= (register_descriptor<adcsrb_s>&)ADCSRB;
+	register_descriptor<didr0_s>& didr0_u 		= (register_descriptor<didr0_s>&)DIDR0;
+	register_descriptor<prr_s>& prr_u 			= (register_descriptor<prr_s>&)PRR;
 
 	/*
 	 * Interface to access bitfields of registers
@@ -137,7 +137,7 @@ namespace adc {
 	}
 
 	void Adc::advance_channel(){
-		Assert(Adc::channels_bitmask);	// assert if any channle selected
+		Assert(Adc::channels_bitmask);	// assert if any channel selected
 		while((Adc::channels_bitmask & (1<<current_channel++)) == 0){
 			current_channel %= CHANNELS_NUM;
 		}

@@ -151,9 +151,9 @@ namespace timer {
 
 
 	// clarify types needed
-	typedef generic_register<tccra_s>& tccra_r;	//reference register type
-	typedef generic_register<tccrb_s>& tccrb_r;	//reference register type
-	typedef generic_register<timsk_s>& timsk_r;	//reference register type
+	typedef register_descriptor<tccra_s>& tccra_r;	//reference register type
+	typedef register_descriptor<tccrb_s>& tccrb_r;	//reference register type
+	typedef register_descriptor<timsk_s>& timsk_r;	//reference register type
 	typedef uint16_t& reg_ref;					//register reference
 
 

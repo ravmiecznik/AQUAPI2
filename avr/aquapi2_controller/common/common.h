@@ -24,7 +24,7 @@ void my__assert(const char *__func, const char *__file, int __lineno, const char
 
 
 /*
- * Generic register.
+ * Register descriptor.
  * Allows RW access of bitfields of register.
  *
  * Example:
@@ -36,10 +36,10 @@ void my__assert(const char *__func, const char *__file, int __lineno, const char
 	 uint8_t refs: 	2;	// select source voltage reference
   };
 
-  generic_register<admux_s>& admux_u		= (generic_register<admux_s>&)ADMUX;
+  register_descriptor<admux_s>& admux_u		= (register_descriptor<admux_s>&)ADMUX;
  */
 template<typename S>
-union generic_register{
+union register_descriptor{
 private:
 	uint8_t reg;
 public:
