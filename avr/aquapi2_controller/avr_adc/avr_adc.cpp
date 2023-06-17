@@ -19,6 +19,27 @@ namespace adc {
 	constexpr static uint8_t CHANNELS_NUM = 8;
 	volatile uint16_t ADC_results[CHANNELS_NUM];
 
+
+	/*
+	 * define registers as generic_register unions
+	 */
+
+	auto& admux_r_descr		= to_register_descriptor<admux_s>(ADMUX);
+	auto& adcsra_r_descr 	= to_register_descriptor<adcsra_s>(ADCSRA);
+	auto& adcsrb_r_descr 	= to_register_descriptor<adcsrb_s>(ADCSRB);
+	auto& didr0_r_descr 	= to_register_descriptor<didr0_s>(DIDR0);
+	auto& prr_r_descr 		= to_register_descriptor<prr_s>(PRR);
+
+
+	/*
+	 * Interface to access bitfields of registers
+	 */
+	admux_s& admux 		= admux_r_descr.bitfield;
+	adcsra_s& adcsra 	= adcsra_r_descr.bitfield;
+	adcsrb_s& adcsrb 	= adcsrb_r_descr.bitfield;
+	didr0_s& didr0 		= didr0_r_descr.bitfield;
+	prr_s& prr 			= prr_r_descr.bitfield;
+
 	/*
 	 * Default ADC interrupt handler
 	 */
@@ -39,25 +60,6 @@ namespace adc {
 		adcsra.adie = 1;
 		adcsra.adsc = 1;
 	}
-
-
-	/*
-	 * define registers as generic_register unions
-	 */
-	register_descriptor<admux_s>& admux_u		= (register_descriptor<admux_s>&)ADMUX;
-	register_descriptor<adcsra_s>& adcsra_u 	= (register_descriptor<adcsra_s>&)ADCSRA;
-	register_descriptor<adcsrb_s>& adcsrb_u 	= (register_descriptor<adcsrb_s>&)ADCSRB;
-	register_descriptor<didr0_s>& didr0_u 		= (register_descriptor<didr0_s>&)DIDR0;
-	register_descriptor<prr_s>& prr_u 			= (register_descriptor<prr_s>&)PRR;
-
-	/*
-	 * Interface to access bitfields of registers
-	 */
-	admux_s& admux 		= admux_u.bitfield;
-	adcsra_s& adcsra 	= adcsra_u.bitfield;
-	adcsrb_s& adcsrb 	= adcsrb_u.bitfield;
-	didr0_s& didr0 		= didr0_u.bitfield;
-	prr_s& prr 			= prr_u.bitfield;
 
 
 	/*
@@ -83,14 +85,14 @@ namespace adc {
 	 * Start and get single ADC conversion
 	 */
 	uint16_t Adc::get_adc(uint8_t mux, uint16_t samples) {
-		uint8_t didr_old = didr0_u;
-		didr0_u = didr0_u | (1<<mux);
+		uint8_t didr_old = didr0_r_descr;
+		didr0_r_descr = didr0_r_descr | (1<<mux);
 		uint16_t mean = 0;
 		Assert(samples < ( (1<<8*(sizeof(uint16_t) - sizeof(uint8_t))) -1 )); // overflow protection
 		for(uint8_t i=0; i<samples; ++i){
 			start_adc(mux);
 			while(adcsra.adsc == 1);
-			didr0_u = didr_old;
+			didr0_r_descr = didr_old;
 			mean += ADC;
 		}
 		Adc::adc_results[mux] = mean;
@@ -102,7 +104,7 @@ namespace adc {
 	 * Select channels for ADC
 	 */
 	void Adc::select_channels(uint8_t bitmask){
-		didr0_u |= bitmask;	// disable digital function of pins ADC5..0
+		didr0_r_descr |= bitmask;	// disable digital function of pins ADC5..0
 		channels_bitmask |= bitmask;
 	}
 
@@ -110,7 +112,7 @@ namespace adc {
 	 * Select single channel for ADC
 	 */
 	void Adc::select_channel(uint8_t chann){
-		didr0_u |= (1<<chann);
+		didr0_r_descr |= (1<<chann);
 		channels_bitmask |= (1<<chann);
 		current_channel = chann;
 		DDRC &= ~(1<<chann); 	// should be solved by pull-up resistor

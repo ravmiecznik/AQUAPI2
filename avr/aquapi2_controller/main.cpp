@@ -87,31 +87,29 @@ int main(void)
 	sei();
 	setup_stdout_for_printf();
 
-	char buf[10];
-	DDRB |= (1<<PB5);
-	uint16_t cnt = 0;
+	Adc::enable();
 
-	Timer1 t1(ClockSelection::clk_d1024);
-	volatile uint16_t& tcnt1 = *(uint16_t*)&TCNT1;
-	void* b = reinterpret_cast<void*>(0xff);
-	auto* p2 = new(b) int;
-	auto i = new int;
+//	Timer1 t1(ClockSelection::clk_d1024);
+//	volatile uint16_t& tcnt1 = *(uint16_t*)&TCNT1;
     while (true)
     {
-    	_delay_ms(1);
-    	if((cnt++)%100 == 0){
-			printf("\033[2J"); // clean screen
-			printf("\033[H");	// move cursor HOME
+    	printf("ADC: %d\n\r", Adc::get_adc(1, 3));
+    	printf("---------------------\n\r");
+    	_delay_ms(500);
 
-			printf("Timer branch\n\r");
-			printf("cs %u\n\r", ClockSelection::no_clock);
-			printf("tcnt %u\n\r", t1.get());
-			printf("tcnt %u\n\r", tcnt1);
-    	}
-
-		if(serial.available()){
-			get_input(cnt);
-		}
+//    	if((cnt++)%100 == 0){
+//			printf("\033[2J"); // clean screen
+//			printf("\033[H");	// move cursor HOME
+//
+//			printf("Timer branch\n\r");
+//			printf("cs %u\n\r", ClockSelection::no_clock);
+//			printf("tcnt %u\n\r", t1.get());
+//			printf("tcnt %u\n\r", tcnt1);
+//    	}
+//
+//		if(serial.available()){
+//			get_input(cnt);
+//		}
 
 
     }

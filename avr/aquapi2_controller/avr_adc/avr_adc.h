@@ -122,10 +122,10 @@ namespace adc
 	};
 
 	//create register references
-	extern admux_s& 	admux;
-	extern adcsra_s& 	adcsra;
-	extern adcsrb_s& 	adcsrb;
-	extern didr0_s&	 	didr0;
+//	extern admux_s& 	admux;
+//	extern adcsra_s& 	adcsra;
+//	extern adcsrb_s& 	adcsrb;
+//	extern didr0_s&	 	didr0;
 	extern volatile uint16_t ADC_results[8];
 
 	struct adc_results_s {

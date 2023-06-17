@@ -26,19 +26,11 @@ void my__assert(const char *__func, const char *__file, int __lineno, const char
 /*
  * Register descriptor.
  * Allows RW access of bitfields of register.
- *
- * Example:
- *
-  struct admux_s{
-	 uint8_t mux: 	4;	// channel selection
-	 bool reserved: 1;
-	 bool adlar: 	1;	// ADC left adjustment
-	 uint8_t refs: 	2;	// select source voltage reference
-  };
-
-  register_descriptor<admux_s>& admux_u		= (register_descriptor<admux_s>&)ADMUX;
+ * Supports assign and logical operations.
+ * e.g.
+ * register_descriptor<admux_s>& admux_u		= (register_descriptor<admux_s>&)ADMUX;
  */
-template<typename S>
+template<typename RegStruct>
 union register_descriptor{
 private:
 	uint8_t reg;
@@ -46,7 +38,7 @@ public:
 	/*
 	 * Register bits
 	 */
-	S bitfield;
+	RegStruct bitfield;
 
 	/*
 	 * Operations on register
@@ -63,6 +55,16 @@ public:
 		reg |= val;
 	}
 };
+
+
+/*
+ * Cast AVR register to register_descriptor.
+ * Brute cast should be safe if used only on AVR 8bit uController.
+ */
+template<typename RegStruct>
+register_descriptor<RegStruct>& to_register_descriptor(volatile uint8_t& reg){
+	return (register_descriptor<RegStruct>&)reg;
+}
 
 
 /*
