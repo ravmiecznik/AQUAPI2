@@ -17,8 +17,6 @@
 #include <avr/interrupt.h>
 #include "../common/common.h"
 
-//TODO: perhaps it may be better to do reinterpret_cast of registers ?
-//TODO: admux_s& admux_r = reinterpret_cast<admux_s&>(ADMUX);
 
 namespace adc
 {
@@ -121,11 +119,7 @@ namespace adc
 		div_128	= 7,
 	};
 
-	//create register references
-//	extern admux_s& 	admux;
-//	extern adcsra_s& 	adcsra;
-//	extern adcsrb_s& 	adcsrb;
-//	extern didr0_s&	 	didr0;
+
 	extern volatile uint16_t ADC_results[8];
 
 	struct adc_results_s {
@@ -139,7 +133,6 @@ namespace adc
 				uint16_t adc7;
 			};
 
-//	template<typename ISR_ARGS, typename ISR_RETT>
 	class Adc
 	{
 	private:
@@ -161,15 +154,6 @@ namespace adc
 		volatile static uint8_t get_current_channel() {return current_channel-1;};
 		static uint8_t get_active_channels() {return channels_bitmask;};
 		volatile static uint8_t get_samples_num() {return samples_num;};
-	};
-
-	template<typename FunctionT>
-	class AdcHandler: public Adc{
-
-		FunctionT isr_handler;
-	public:
-		AdcHandler() {};
-		AdcHandler(FunctionT fptr): isr_handler(fptr) {};
 	};
 
 
