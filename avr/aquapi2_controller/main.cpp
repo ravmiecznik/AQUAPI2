@@ -18,6 +18,9 @@
 
 Usart* Serial;
 
+void* operator new(size_t, void* p) {return p;};
+void* operator new(size_t s) {return malloc(s);};
+
 void get_input(uint16_t& cnt){
 	CircBuffer cmd_buff(100);
 	printf("root>");
@@ -84,35 +87,26 @@ int main(void)
 	sei();
 	setup_stdout_for_printf();
 
-
-//	Adc::enable();
-//	Adc::select_channel(0);
-//	Adc::select_channel(1);
-//	Adc::select_channel(2);
-//	Adc::select_channel(3);
-//	Adc::select_channel(4);
-//	Adc::select_channel(5);
-//	Adc::adc_on_interrupt(prescaler::div_128, vref::avcc_ext_cap, 10);
-//	AdcHandler<FunctionPtr<void()>> adc( [](){printf("isr_h");} );
-
 	char buf[10];
 	DDRB |= (1<<PB5);
 	uint16_t cnt = 0;
 
-//	Timer1 t1();
-	Timer1 t1;
-//	t1.ocia_int_enable();
-
+	Timer1 t1(ClockSelection::clk_d1024);
+	volatile uint16_t& tcnt1 = *(uint16_t*)&TCNT1;
+	void* b = reinterpret_cast<void*>(0xff);
+	auto* p2 = new(b) int;
+	auto i = new int;
     while (true)
     {
     	_delay_ms(1);
-    	if((cnt++)%1000 == 0){
+    	if((cnt++)%100 == 0){
 			printf("\033[2J"); // clean screen
 			printf("\033[H");	// move cursor HOME
 
 			printf("Timer branch\n\r");
 			printf("cs %u\n\r", ClockSelection::no_clock);
-			printf("tcnt %lu\n\r", t1.get());
+			printf("tcnt %u\n\r", t1.get());
+			printf("tcnt %u\n\r", tcnt1);
     	}
 
 		if(serial.available()){

@@ -17,6 +17,9 @@
 #include <avr/interrupt.h>
 #include "../common/common.h"
 
+//TODO: perhaps it may be better to do reinterpret_cast of registers ?
+//TODO: admux_s& admux_r = reinterpret_cast<admux_s&>(ADMUX);
+
 
 /*
  * ADMUX register structure
