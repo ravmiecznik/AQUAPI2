@@ -86,17 +86,17 @@ namespace adc {
 	 */
 	uint16_t Adc::get_adc(uint8_t mux, uint16_t samples) {
 		uint8_t didr_old = didr0_r_descr;
-		didr0_r_descr = didr0_r_descr | (1<<mux);
-		uint16_t mean = 0;
+		didr0_r_descr |= (1<<mux);
+		uint16_t sum = 0;
 		Assert(samples < ( (1<<8*(sizeof(uint16_t) - sizeof(uint8_t))) -1 )); // overflow protection
 		for(uint8_t i=0; i<samples; ++i){
 			start_adc(mux);
 			while(adcsra.adsc == 1);
 			didr0_r_descr = didr_old;
-			mean += ADC;
+			sum += ADC;
 		}
-		Adc::adc_results[mux] = mean;
-		return mean/samples;
+		Adc::adc_results[mux] = sum/samples;
+		return sum/samples;
 
 	}
 
@@ -135,7 +135,7 @@ namespace adc {
 	}
 
 	adc_results_s* Adc::get_adc_resultsp(){
-		return (adc_results_s*)(&adc_results);
+		return (adc_results_s*)adc_results;
 	}
 
 	void Adc::advance_channel(){

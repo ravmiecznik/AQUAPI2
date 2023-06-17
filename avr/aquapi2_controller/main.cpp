@@ -93,7 +93,10 @@ int main(void)
 //	volatile uint16_t& tcnt1 = *(uint16_t*)&TCNT1;
     while (true)
     {
+
     	printf("ADC: %d\n\r", Adc::get_adc(1, 3));
+    	auto r = Adc::get_adc_resultsp()->adc1;
+    	printf("ADC: %d\n\r", r);
     	printf("---------------------\n\r");
     	_delay_ms(500);
 
