@@ -19,9 +19,12 @@
 
 Usart* Serial;
 
+//experimental
 void* operator new(size_t, void* p) {return p;};
 void* operator new(size_t s) {return malloc(s);};
 
+
+//experimental interraction when serial output (stdout) is connected to SCREEN
 void get_input(uint16_t& cnt){
 	CircBuffer cmd_buff(100);
 	printf("root>");
@@ -38,7 +41,6 @@ void get_input(uint16_t& cnt){
 			}
 
 		}
-//				printf("%u ", c);
 	}
 	printf("\n\rI got: ");
 	while(cmd_buff.available()){
@@ -82,16 +84,35 @@ using namespace adc;
 using namespace timer;
 
 
+/*
+ * Screen manipulation
+ * https://student.cs.uwaterloo.ca/~cs452/terminal.html
+ */
 namespace Screen{
+
+	enum class text_color{
+		black = 30,
+		red,
+		green,
+		yellow,
+		blue,
+		magenta,
+		cyan,
+		white
+	};
+
 	void clear(){
 		printf_P(PSTR("\033[2J\033[H")); // clean screen / move cursor HOME
 	}
 
-	void nl(int nr=10){
-		while(nr--){
-			printf("\n");
-		}
-		printf("\r");
+	/*
+	 * Move cursor
+	 */
+	void mv_cursor(uint16_t row, uint16_t col=0){
+		printf_P(PSTR("\033[%u;%uH"),  row, col); // clean screen / move cursor HOME
+	}
+	void set_color(text_color color){
+		printf_P(PSTR("\033[%um"), color);
 	}
 };
 
@@ -111,14 +132,14 @@ int main(void)
 		uint8_t samples_num = 3;
 		Adc::enable_interrupt(adc_channels_ena, prescaler::div_128, vref::avcc_ext_cap, samples_num);
 	}
-//	Timer1 t1(ClockSelection::clk_d1024);
-//	volatile uint16_t& tcnt1 = *(uint16_t*)&TCNT1;
 	adc_results_s adc_results;
+
+
     while (true)
     {
-
+    	Screen::set_color(Screen::text_color::green);
     	Screen::clear();
-    	Screen::nl(20);
+    	Screen::mv_cursor(20);
     	adc_results = Adc::get_adc_results();
     	printf("ADC1: %u\n\r", adc_results.adc0);
     	printf("ADC1: %u\n\r", adc_results.adc1);
@@ -131,20 +152,6 @@ int main(void)
     	printf("---------------------\n\r");
 
     	_delay_ms(500);
-
-//    	if((cnt++)%100 == 0){
-//			printf("\033[2J"); // clean screen
-//			printf("\033[H");	// move cursor HOME
-//
-//			printf("Timer branch\n\r");
-//			printf("cs %u\n\r", ClockSelection::no_clock);
-//			printf("tcnt %u\n\r", t1.get());
-//			printf("tcnt %u\n\r", tcnt1);
-//    	}
-//
-//		if(serial.available()){
-//			get_input(cnt);
-//		}
 
 
     }
