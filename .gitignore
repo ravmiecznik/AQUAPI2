@@ -6,3 +6,6 @@
 
 #lbr tmp files
 *.l#[0-9]*
+
+.cproject
+.project
