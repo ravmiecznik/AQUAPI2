@@ -109,7 +109,7 @@ namespace Screen{
 	 * Move cursor
 	 */
 	void mv_cursor(uint16_t row, uint16_t col=0){
-		printf_P(PSTR("\033[%u;%uH"),  row, col); // clean screen / move cursor HOME
+		printf_P(PSTR("\033[%u;%uH"),  row, col);
 	}
 	void set_color(text_color color){
 		printf_P(PSTR("\033[%um"), color);
