@@ -9,9 +9,6 @@
 #define COMMON_COMMON_H_
 
 
-//typedef void (*func_ptr)();
-
-
 template<typename Func>
 using FunctionPtr = Func*;
 
@@ -53,6 +50,29 @@ public:
 
 	void operator|=(uint8_t val){
 		reg |= val;
+	}
+
+	void set_bit(uint8_t bit){
+		reg |= (1<<bit);
+	}
+};
+
+union bitfield8{
+private:
+	uint8_t byte=0;
+public:
+	struct{
+		bool b0: 1;
+		bool b1: 1;
+		bool b2: 1;
+		bool b3: 1;
+		bool b4: 1;
+		bool b5: 1;
+		bool b6: 1;
+		bool b7: 1;
+	};
+	operator uint8_t(){
+		return byte;
 	}
 };
 

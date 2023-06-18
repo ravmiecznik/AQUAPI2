@@ -16,6 +16,7 @@
 #include "avr_adc/avr_adc.h"
 
 
+
 Usart* Serial;
 
 void* operator new(size_t, void* p) {return p;};
@@ -80,24 +81,55 @@ UsartConfig get_usart_config(){
 using namespace adc;
 using namespace timer;
 
+
+namespace Screen{
+	void clear(){
+		printf_P(PSTR("\033[2J\033[H")); // clean screen / move cursor HOME
+	}
+
+	void nl(int nr=10){
+		while(nr--){
+			printf("\n");
+		}
+		printf("\r");
+	}
+};
+
 int main(void)
 {
 	Usart serial(get_usart_config());
 	Serial = &serial;
-	sei();
 	setup_stdout_for_printf();
+	sei();
 
-	Adc::enable();
+	{//auto remove temp variables in this scope
 
+		bitfield8 adc_channels_ena;
+		adc_channels_ena.b0 = 1;
+		adc_channels_ena.b7 = 1;
+		adc_channels_ena.b2 = 1;
+		uint8_t samples_num = 3;
+		Adc::enable_interrupt(adc_channels_ena, prescaler::div_128, vref::avcc_ext_cap, samples_num);
+	}
 //	Timer1 t1(ClockSelection::clk_d1024);
 //	volatile uint16_t& tcnt1 = *(uint16_t*)&TCNT1;
+	adc_results_s adc_results;
     while (true)
     {
 
-    	printf("ADC: %d\n\r", Adc::get_adc(1, 3));
-    	auto r = Adc::get_adc_resultsp()->adc1;
-    	printf("ADC: %d\n\r", r);
+    	Screen::clear();
+    	Screen::nl(20);
+    	adc_results = Adc::get_adc_results();
+    	printf("ADC1: %u\n\r", adc_results.adc0);
+    	printf("ADC1: %u\n\r", adc_results.adc1);
+    	printf("ADC2: %u\n\r", adc_results.adc2);
+    	printf("ADC3: %u\n\r", adc_results.adc3);
+    	printf("ADC4: %u\n\r", adc_results.adc4);
+    	printf("ADC5: %u\n\r", adc_results.adc5);
+    	printf("ADC6: %u\n\r", adc_results.adc6);
+    	printf("ADC7: %u\n\r", adc_results.adc7);
     	printf("---------------------\n\r");
+
     	_delay_ms(500);
 
 //    	if((cnt++)%100 == 0){

@@ -8,6 +8,7 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <assert.h>
+#include <avr/delay.h>
 #include "common.h"
 #include "../usart/usart.h"
 
@@ -37,6 +38,7 @@ const char assert_msg_template[] PROGMEM = "assertion in func: %s, file: %s, lin
 
 extern Usart* Serial;
 void my__assert(const char *__func, const char *__file, int __lineno, const char *__sexp){
+	_delay_ms(2); //must delay until stdout is ready
 	fprintf_P(stderr, assert_msg_template , __func, __file, __lineno, __sexp);
 	while(Serial->tx_data_pending()); 				//wait for fprintf to finish
 	__assert(__func, __file, __lineno, __sexp);		//call real assertion

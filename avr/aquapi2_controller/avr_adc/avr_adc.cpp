@@ -47,7 +47,6 @@ namespace adc {
 	volatile static uint32_t samples_sum = 0;
 	ISR(ADC_vect){
 		if(current_sample++ < Adc::get_samples_num()){
-			while(adcsra.adsc == 1);
 			samples_sum += ADC-1;
 		}
 		else{
@@ -55,47 +54,62 @@ namespace adc {
 			Adc::advance_channel();
 			current_sample = 0;
 			samples_sum = 0;
-
 		}
 		adcsra.adie = 1;
 		adcsra.adsc = 1;
 	}
 
+	/*
+	 * Enable ADC
+	 */
+	void Adc::enable(vref ref) {
+		adcsra.aden = 1;
+		prr.pradc = 0;
+		admux.refs = (uint8_t)ref;
+	}
 
 	/*
+	 * Enables ADC interrupt
 	 */
-	void Adc::adc_on_interrupt(prescaler pre, vref v,uint8_t samples_num){
+	void Adc::enable_interrupt(bitfield8 channels_bitmask, prescaler prescaler, vref v, uint8_t samples){
+		select_channels(channels_bitmask);
+		Assert(channels_bitmask);	//must use Adc::select_channels first
+		samples_num = samples;
+		adcsra.aden = 1;
 		admux.refs = (uint8_t)v;
-		adcsra.adps = (uint8_t)pre;
+		adcsra.adps = (uint8_t)prescaler;
 		adcsra.adie = 1;
+		enable(v);
+
 		adcsra.adsc = 1;
+		delay_cpu_cycles(5);
 	}
 
 	/*
 	 * Start single ADC conversion
 	 */
 	void Adc::start_adc(uint8_t mux) {
+		uint8_t didr_old = didr0_r_descr;
+		didr0_r_descr.set_bit(mux);
 		admux.mux = mux;
-		admux.refs = (uint8_t)vref::avcc_ext_cap;
 		adcsra.adsc = 1;
 		delay_cpu_cycles(5);
+		didr0_r_descr = didr_old;
+		while(adcsra.adsc == 1);
 	}
 
 	/*
 	 * Start and get single ADC conversion
 	 */
 	uint16_t Adc::get_adc(uint8_t mux, uint16_t samples) {
-		uint8_t didr_old = didr0_r_descr;
-		didr0_r_descr |= (1<<mux);
 		uint16_t sum = 0;
 		Assert(samples < ( (1<<8*(sizeof(uint16_t) - sizeof(uint8_t))) -1 )); // overflow protection
+		start_adc(mux);	// one blind ADC conversion to clean last result;
 		for(uint8_t i=0; i<samples; ++i){
 			start_adc(mux);
-			while(adcsra.adsc == 1);
-			didr0_r_descr = didr_old;
 			sum += ADC;
+			ADC = 0;
 		}
-		Adc::adc_results[mux] = sum/samples;
 		return sum/samples;
 
 	}
@@ -119,13 +133,6 @@ namespace adc {
 		PORTC |= (1<<chann);		// should be solved by pull-up resistor
 	}
 
-	/*
-	 * Enable ADC
-	 */
-	void Adc::enable() {
-		adcsra.aden = 1;
-		prr.pradc = 0;
-	}
 
 	/*
 	 * Get adc_results_s struct
@@ -139,7 +146,6 @@ namespace adc {
 	}
 
 	void Adc::advance_channel(){
-		Assert(Adc::channels_bitmask);	// assert if any channel selected
 		while((Adc::channels_bitmask & (1<<current_channel++)) == 0){
 			current_channel %= CHANNELS_NUM;
 		}

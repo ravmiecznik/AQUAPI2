@@ -10,5 +10,5 @@ echo $0 myargs $*
 
 
 scp $hex_file aquapi@aquapi600.lan:~/ 
-#ssh aquapi@aquapi600.lan "echo 12 >  /sys/class/gpio/unexport; sudo avrdude -p atmega328p  -c pi_1 -U flash:w:aquapi_tmp.hex:i"
-ssh aquapi@aquapi600.lan "sudo avrdude -p atmega328p  -c pi_1 -U flash:w:$(basename $hex_file):i"
+#ssh aquapi@aquapi600.lan "kill \$(pgrep screen)"
+ssh aquapi@aquapi600.lan "sudo avrdude -p atmega328p  -V -c pi_1 -U flash:w:$(basename $hex_file):i"

@@ -142,18 +142,23 @@ namespace adc
 		volatile static uint8_t current_channel;
 		volatile static uint16_t* adc_results;
 		volatile static uint8_t samples_num;
+		static uint8_t get_active_channels() {return channels_bitmask;};
+
 	public:
-		static void adc_on_interrupt(prescaler pre=prescaler::div_128, vref v=vref::avcc_ext_cap, uint8_t samples_num=3);
+		static void enable_interrupt(
+				bitfield8 channels_bitmask,
+				prescaler pre=prescaler::div_128,
+				vref v=vref::avcc_ext_cap,
+				uint8_t samples_num=3);
 		static uint16_t get_adc(uint8_t mux, uint16_t samples=1);
 		static adc_results_s get_adc_results();
 		static adc_results_s* get_adc_resultsp();
-		static void enable();
+		static void enable(vref v=vref::avcc_ext_cap);
 		static void select_channels(uint8_t bitmask);
 		static void select_channel(uint8_t chann);
+		volatile static uint8_t get_samples_num() {return samples_num;};
 		static void advance_channel();
 		volatile static uint8_t get_current_channel() {return current_channel-1;};
-		static uint8_t get_active_channels() {return channels_bitmask;};
-		volatile static uint8_t get_samples_num() {return samples_num;};
 	};
 
 
