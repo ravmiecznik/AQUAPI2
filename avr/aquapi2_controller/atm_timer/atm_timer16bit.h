@@ -10,9 +10,12 @@
 
 #include <stdint.h>
 #include <avr/io.h>
+#include <avr/interrupt.h>
+#include <stdio.h>
 #include "../common/common.h"
 
 namespace timer {
+
 
 	/*
 	 * Compare Output Mode, no PWM
@@ -67,7 +70,7 @@ namespace timer {
 		pwm_phc_8bit,
 		pwm_phc_9bit,
 		pwm_phc_10bit,
-		ctc_ocr1a,			//clear timer on compare match
+		ctc_ocr1a,
 		fast_pwm_8bit,
 		fast_pwm_9bit,
 		fast_pwm_10bit,
@@ -112,7 +115,7 @@ namespace timer {
 
 	/*
 	 * TCCRA register structure
-	 * Timer control register A
+	 * Timer control register A for 8 and 16 bit timers
 	 *
 	 */
 	struct tccra_s{
@@ -124,10 +127,23 @@ namespace timer {
 
 	/*
 	 * TCCRB register structure
-	 * Timer control register B
+	 * Timer control register B for 8 bit timer
 	 *
 	 */
-	struct tccrb_s{
+	struct tccrb_8bit_s{
+		ClockSelection cs:	3;
+		uint8_t wgm_2:		1;  //TODO: how to acces upper nibble, bits 3 2 of wgm enum ?
+		bool :				2;	// reserved
+		uint8_t focob:		1;	// force output compare A
+		uint8_t focoa:		1;	// force output compare B
+	};
+
+	/*
+	 * TCCRB register structure
+	 * Timer control register B for 16 bit timer
+	 *
+	 */
+	struct tccrb_16bit_s{
 		ClockSelection cs:	3;
 		uint8_t wgm_32:		2;  //TODO: how to acces upper nibble, bits 3 2 of wgm enum ?
 		bool :				1;	// reserved
@@ -137,10 +153,24 @@ namespace timer {
 
 	/*
 	 * TIMSK register structure
-	 * Timer interrupt maks register
+	 * Timer interrupt mask register for 8 bit timer
 	 *
 	 */
-	struct timsk_s{
+	struct timsk_8bit_s{
+		bool toie: 			1;
+		bool ociea:			1;
+		bool ocieb: 		1;
+		uint8_t:			2;	// reserved
+		bool icie1:			1;
+		uint8_t:			2;	// reserved
+	};
+
+	/*
+	 * TIMSK register structure
+	 * Timer interrupt mask register for 16 bit timer
+	 *
+	 */
+	struct timsk_16bit_s{
 		bool toie: 			1;
 		bool ociea:			1;
 		bool ocieb: 		1;
@@ -150,65 +180,152 @@ namespace timer {
 	};
 
 
-	// clarify types needed
-	typedef register_descriptor<tccra_s>& tccra_r;	//reference register type
-	typedef register_descriptor<tccrb_s>& tccrb_r;	//reference register type
-	typedef register_descriptor<timsk_s>& timsk_r;	//reference register type
-	typedef uint16_t& reg_ref;					//register reference
+	template<typename TimerType>
+	uint16_t tcnt_to_ms(TimerType tcnt, uint16_t prescaler){
+		uint32_t ticks = tcnt;
+		ticks *= prescaler;
+		ticks = ticks/(F_CPU/1000);  			//same as 1000*ticks/F_CPU, having F_CPU/1000 avoids type truncation
+		return static_cast<uint16_t>(ticks);
+	}
+
+	/*
+	 * Time representation struct
+	 */
+	struct Time{
+		uint16_t hours = 0;
+		uint8_t minutes = 0;
+		uint8_t seconds = 0;
+		uint16_t milisecond = 0;
+
+		Time(uint8_t h, uint8_t m, uint8_t s, uint16_t ms): hours(h), minutes(m), seconds(s), milisecond(ms) {};
+
+		template<typename T>
+		void operator++(T ms){
+			//not implemented
+		};
+
+		template<typename T>
+		Time& operator+=(T ms){
+			milisecond += ms;
+			seconds += milisecond/1000;
+			milisecond %= 1000;
+
+			minutes += seconds/60;
+			seconds %= 60;
+
+			hours += minutes/60;
+			minutes %= 60;
+
+			return *this;
+		}
+		~Time(){};
+	};
 
 
 	/*
 	 * Abstract Timer class.
 	 * All timers should support below operations.
 	 */
+	template<typename TimerType, typename tccrbRegVariantStruct, typename timskRegVariantStruct> // uint8_t or uint16_t
 	class TimerBase{
+	private:
+		using reg_ref = volatile uint8_t&;
+		using tccrb_register_d = register_descriptor<tccrbRegVariantStruct>;
+		using tccra_register_d = register_descriptor<tccra_s>;
+		using timsk_register_d = register_descriptor<timskRegVariantStruct>;
 
-	};
 
-	/*
-	 * Base 16bit Timer
-	 */
-	class Timer_16bit{
+
+		volatile TimerType& tcnt;
+
+		tccra_register_d& tccra_rd;
+		tccra_s& tccra = tccra_rd.bitfield;
+
+		tccrb_register_d& tccrb_rd;
+		timsk_register_d& timsk_rd;
+
 	protected:
-		tccra_r tccra_u;	//union access
-		tccrb_r tccrb_u;	//union access
-		timsk_r timsk_u;	//union access
+		using toi_handler_ptr = void(*)(TimerBase<TimerType, tccrbRegVariantStruct, timskRegVariantStruct>*);
+		tccrbRegVariantStruct& tccrb = tccrb_rd.bitfield;
+		timskRegVariantStruct& timsk = timsk_rd.bitfield;
 
-		/*
-		 * Interface to access bitfields of registers
-		 */
-		tccrb_s& tccrb;
-		tccra_s& tccra;
-		timsk_s& timsk;
-		reg_ref& tcnt;
-		reg_ref& ocra;		//otuput compare register A
 
-		// assign registers to timer
-		Timer_16bit(tccra_r tccra_arg, tccrb_r tccrb_arg, timsk_r timsk_arg, reg_ref& tcnt_arg, reg_ref ocra_arg);
-		void start_timer(ClockSelection cs= ClockSelection::clk_d1);
 
 	public:
-		virtual void ocia_int_enable(uint16_t ocra=0);  //TODO: assign ISR handler in int_enable function
-		virtual uint16_t get();
-	};
+		uint16_t prescaler;
+		TimerBase(ClockSelection cs,
+				volatile TimerType& tcnt, reg_ref tccra, reg_ref tccrb, reg_ref timsk):
+			tcnt(tcnt),
+			tccra_rd((tccra_register_d&)tccra),
+			tccrb_rd((tccrb_register_d&)tccrb),
+			timsk_rd((timsk_register_d&)timsk)
+			{
 
-	class Timer1: public Timer_16bit{
-	public:
+			switch (cs) {
+				case ClockSelection::clk_d1:
+					prescaler = 1;
+					break;
+				case ClockSelection::clk_d8:
+					prescaler = 8;
+					break;
+				case ClockSelection::clk_d64:
+					prescaler = 64;
+					break;
+				case ClockSelection::clk_d256:
+					prescaler = 256;
+					break;
+				case ClockSelection::clk_d1024:
+					prescaler = 1024;
+					break;
+				default:
+					Assert(false); //can't map clock source to prescaler
+					break;
+			}
+		}
+
+
 		/*
-		 * Start timer with clock prescaler = 1 by default
+		 * Convert raw TCNT value to ms
 		 */
-		using Timer_16bit::Timer_16bit;
-		Timer1();
-		Timer1(ClockSelection cs= ClockSelection::clk_d1);
+		uint16_t to_ms(TimerType tcnt){
+			return tcnt_to_ms(tcnt, prescaler);
+		}
 
-		// virtual ~Timer1() {};  // !!! virtual destructor not supported with avr-gcc
+
+		/*
+		 * Get raw time
+		 */
+		uint16_t get(){
+			return tcnt;
+		}
+
+
+		virtual ~TimerBase(){};
 	};
+
+
+	class Timer1: public TimerBase<uint16_t, tccrb_16bit_s, timsk_16bit_s>{
+	public:
+		static Time time;
+		static uint16_t prescaler_s;
+		Timer1(ClockSelection cs):
+			TimerBase(cs, TCNT1, TCCR1A, TCCR1B, TIMSK1)
+		{
+			tccrb.cs = cs;
+			timsk.toie = 1;
+			prescaler_s = prescaler;
+		};
+
+		Time get_time(){
+			return time;
+		}
+
+		virtual ~Timer1(){};
+
+	};
+
 
 }
-
-// useful example
-// Access TCNT1 register
-// volatile uint16_t& TCNT1 = *(uint16_t*)0x84;
 
 
 #endif /* ATM_TIMER_ATM_TIMER16BIT_H_ */
