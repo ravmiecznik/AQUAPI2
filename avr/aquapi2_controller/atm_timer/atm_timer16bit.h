@@ -158,6 +158,14 @@ namespace timer {
 
 
 	/*
+	 * Abstract Timer class.
+	 * All timers should support below operations.
+	 */
+	class TimerBase{
+
+	};
+
+	/*
 	 * Base 16bit Timer
 	 */
 	class Timer_16bit{
