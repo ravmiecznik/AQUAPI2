@@ -14,6 +14,7 @@
 #include "atm_timer/atm_timer16bit.h"
 #include "usart/usart.h"
 #include "avr_adc/avr_adc.h"
+#include "avr_screen/screen.h"
 
 
 
@@ -23,35 +24,6 @@ Usart* Serial;
 void* operator new(size_t, void* p) {return p;};
 void* operator new(size_t s) {return malloc(s);};
 
-
-//experimental interraction when serial output (stdout) is connected to SCREEN
-void get_input(uint16_t& cnt){
-	CircBuffer cmd_buff(100);
-	printf("root>");
-	for(char c=Serial->get(); c != '\r'; c=Serial->get()){
-		if(c){
-			if(cmd_buff.put(c)){
-				Serial->Putchar(c);
-			}
-			if(c == 127){
-				cmd_buff.pop_last(2);
-				printf("\33[D"); // mv cursor left
-				printf("\33[J"); // clear char
-				PORTB ^= (1<<PB5);
-			}
-
-		}
-	}
-	printf("\n\rI got: ");
-	while(cmd_buff.available()){
-
-		Serial->Putchar(cmd_buff.get());
-	}
-	cmd_buff.flush();
-	cnt = 0;
-	while(not Serial->available());
-	Serial->rx_buffer.flush();
-}
 
 /****************************************************************/
 /*
@@ -84,37 +56,7 @@ using namespace adc;
 using namespace timer;
 
 
-/*
- * Screen manipulation
- * https://student.cs.uwaterloo.ca/~cs452/terminal.html
- */
-namespace Screen{
 
-	enum class text_color{
-		black = 30,
-		red,
-		green,
-		yellow,
-		blue,
-		magenta,
-		cyan,
-		white
-	};
-
-	void clear(){
-		printf_P(PSTR("\033[2J\033[H")); // clean screen / move cursor HOME
-	}
-
-	/*
-	 * Move cursor
-	 */
-	void mv_cursor(uint16_t row, uint16_t col=0){
-		printf_P(PSTR("\033[%u;%uH"),  row, col);
-	}
-	void set_color(text_color color){
-		printf_P(PSTR("\033[%um"), color);
-	}
-};
 
 int main(void)
 {
@@ -137,7 +79,9 @@ int main(void)
 
     while (true)
     {
-    	Screen::set_color(Screen::text_color::green);
+
+    	Screen::get_input(serial);
+    	Screen::set_text_color(Screen::text_color::green);
     	Screen::clear();
     	Screen::mv_cursor(20);
     	adc_results = Adc::get_adc_results();
@@ -150,7 +94,6 @@ int main(void)
     	printf("ADC6: %u\n\r", adc_results.adc6);
     	printf("ADC7: %u\n\r", adc_results.adc7);
     	printf("---------------------\n\r");
-
     	_delay_ms(500);
 
 

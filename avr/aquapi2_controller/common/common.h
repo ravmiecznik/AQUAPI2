@@ -8,6 +8,18 @@
 #ifndef COMMON_COMMON_H_
 #define COMMON_COMMON_H_
 
+#include <avr/pgmspace.h>
+
+/*
+ * Macro to print a string which is automatically stored in PGMSPACE
+ */
+#define PRINTFP_V(str, ...) printf_P(PSTR(str),__VA_ARGS__)
+
+/*
+ * Macro to print a string with variadic args which is automatically stored in PGMSPACE
+ */
+#define PRINTFP(str) printf_P(PSTR(str))
+
 
 template<typename Func>
 using FunctionPtr = Func*;
