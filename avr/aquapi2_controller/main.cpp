@@ -67,6 +67,7 @@ int main(void)
 	sei();
 
 	Timer1 timer1_16bit(ClockSelection::clk_d256);
+	Time init_time{8, 23, 0, 0};
 
 	uint16_t t0 = timer1_16bit.get();
     while (true)
@@ -77,7 +78,7 @@ int main(void)
     	Screen::clear();
     	Screen::mv_cursor(20);
     	printf("t16 %u\n\r", timer1_16bit.to_ms(timer1_16bit.get() - t0));
-    	Time t = timer1_16bit.get_time();
+    	Time t = timer1_16bit.get_time(init_time);
     	printf("uptime %02uh:%02um:%02us\n\r", t.hours, t.minutes, t.seconds);
     	printf("---------------------\n\r");
     	t0 = timer1_16bit.get();

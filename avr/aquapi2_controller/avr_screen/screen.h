@@ -24,7 +24,8 @@
  * https://student.cs.uwaterloo.ca/~cs452/terminal.html
  */
 namespace Screen{
-
+	//TODO: how to get terminal size ?
+	// in theory this is a sequence to get terminal size: \033[8;20t
 	enum class text_color{
 		black = 30,
 		red,

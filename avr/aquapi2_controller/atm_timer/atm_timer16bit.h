@@ -180,8 +180,8 @@ namespace timer {
 	};
 
 
-	template<typename TimerType>
-	uint16_t tcnt_to_ms(TimerType tcnt, uint16_t prescaler){
+	template<typename T>
+	uint16_t tcnt_to_ms(T tcnt, uint16_t prescaler){
 		uint32_t ticks = tcnt;
 		ticks *= prescaler;
 		ticks = ticks/(F_CPU/1000);  			//same as 1000*ticks/F_CPU, having F_CPU/1000 avoids type truncation
@@ -198,6 +198,15 @@ namespace timer {
 		uint16_t milisecond = 0;
 
 		Time(uint8_t h, uint8_t m, uint8_t s, uint16_t ms): hours(h), minutes(m), seconds(s), milisecond(ms) {};
+		Time(uint64_t timestamp) {
+			milisecond = timestamp % 1000;
+			timestamp /= 1000;
+			seconds = timestamp % 60;
+			timestamp /= 60;
+			minutes = timestamp % 60;
+			timestamp /= 60;
+			hours = timestamp;
+		};
 
 		template<typename T>
 		void operator++(T ms){
@@ -218,6 +227,13 @@ namespace timer {
 
 			return *this;
 		}
+
+		template<typename T>
+		T to_ms(){
+			T miliseconds = 1000*(static_cast<T>(hours)*60*60 + static_cast<T>(minutes)*60 + static_cast<T>(seconds)) + milisecond;
+			return miliseconds;
+		}
+
 		~Time(){};
 	};
 
@@ -287,7 +303,7 @@ namespace timer {
 		/*
 		 * Convert raw TCNT value to ms
 		 */
-		uint16_t to_ms(TimerType tcnt){
+		uint16_t to_ms(uint32_t tcnt){
 			return tcnt_to_ms(tcnt, prescaler);
 		}
 
@@ -306,7 +322,7 @@ namespace timer {
 
 	class Timer1: public TimerBase<uint16_t, tccrb_16bit_s, timsk_16bit_s>{
 	public:
-		static Time time;
+		static uint32_t toi_counter;
 		static uint16_t prescaler_s;
 		Timer1(ClockSelection cs):
 			TimerBase(cs, TCNT1, TCCR1A, TCCR1B, TIMSK1)
@@ -316,8 +332,10 @@ namespace timer {
 			prescaler_s = prescaler;
 		};
 
-		Time get_time(){
-			return time;
+		Time get_time(Time add_Time = 0){
+			uint32_t single_toi_time_ms = to_ms(0x10000);
+			auto additional_time = add_Time.to_ms<uint32_t>();
+			return Time(single_toi_time_ms*toi_counter + additional_time);
 		}
 
 		virtual ~Timer1(){};
