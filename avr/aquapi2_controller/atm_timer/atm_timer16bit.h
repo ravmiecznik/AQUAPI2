@@ -322,6 +322,9 @@ namespace timer {
 
 	class Timer1: public TimerBase<uint16_t, tccrb_16bit_s, timsk_16bit_s>{
 	public:
+		//TODO: define static interrupt handler like:
+		// static fptr toi_handler = null_function;
+		// and assign handlers once Timer instantiated
 		static uint32_t toi_counter;
 		static uint16_t prescaler_s;
 		Timer1(ClockSelection cs):
