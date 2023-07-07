@@ -23,6 +23,7 @@ Usart* Serial;
 //experimental
 void* operator new(size_t, void* p) {return p;};
 void* operator new(size_t s) {return malloc(s);};
+void operator delete(void* ptr) {free(ptr);};
 
 
 /****************************************************************/
@@ -65,37 +66,21 @@ int main(void)
 	setup_stdout_for_printf();
 	sei();
 
-	{//auto remove temp variables in this scope
+	Timer1 timer1_16bit(ClockSelection::clk_d1);
+	Time init_time{12, 29, 30, 0};
 
-		bitfield8 adc_channels_ena;
-		adc_channels_ena.b0 = 1;
-		adc_channels_ena.b7 = 1;
-		adc_channels_ena.b2 = 1;
-		uint8_t samples_num = 3;
-		Adc::enable_interrupt(adc_channels_ena, prescaler::div_128, vref::avcc_ext_cap, samples_num);
-	}
-	adc_results_s adc_results;
-
-
+	auto tic = timer1_16bit.tic();
     while (true)
     {
 
     	Screen::get_input(serial);
     	Screen::set_text_color(Screen::text_color::green);
     	Screen::clear();
-    	Screen::mv_cursor(20);
-    	adc_results = Adc::get_adc_results();
-    	printf("ADC1: %u\n\r", adc_results.adc0);
-    	printf("ADC1: %u\n\r", adc_results.adc1);
-    	printf("ADC2: %u\n\r", adc_results.adc2);
-    	printf("ADC3: %u\n\r", adc_results.adc3);
-    	printf("ADC4: %u\n\r", adc_results.adc4);
-    	printf("ADC5: %u\n\r", adc_results.adc5);
-    	printf("ADC6: %u\n\r", adc_results.adc6);
-    	printf("ADC7: %u\n\r", adc_results.adc7);
+    	Screen::mv_cursor(50);
+    	auto now = timer1_16bit.get_time(init_time);
+    	printf("time %02um:%02us\n\r", now.minutes , now.seconds);
     	printf("---------------------\n\r");
+    	tic = timer1_16bit.tic();
     	_delay_ms(500);
-
-
     }
 }

@@ -91,13 +91,19 @@ public:
 
 /*
  * Cast AVR register to register_descriptor.
- * Brute cast should be safe if used only on AVR 8bit uController.
+ * Naked cast should be safe if used only on AVR 8bit uController.
  */
 template<typename RegStruct>
 register_descriptor<RegStruct>& to_register_descriptor(volatile uint8_t& reg){
 	return (register_descriptor<RegStruct>&)reg;
 }
 
+
+
+/*
+ * function pointer type
+ */
+typedef void (*fptr)(void);
 
 /*
  * Null function
